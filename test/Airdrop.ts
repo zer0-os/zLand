@@ -5,6 +5,7 @@ import {
   import hre from "hardhat";
   import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
   import * as fs from "fs";
+  import { ethers } from "hardhat";
   
   interface Entry {
     address: string;
@@ -49,9 +50,9 @@ import {
           // Claim the token
           await landToken.connect(addr1).claim(proof, entry.address, tokenId);
   
-          // Normalize both addresses to lowercase for comparison
-          const actualOwner = (await landToken.ownerOf(tokenId)).toLowerCase();
-          const expectedOwner = entry.address.toLowerCase();
+          // Normalize both addresses using ethers.utils.getAddress
+          const actualOwner = ethers.getAddress(await landToken.ownerOf(tokenId));
+          const expectedOwner = ethers.getAddress(entry.address);
   
           // Check that the owner of the token is the intended address
           expect(actualOwner).to.equal(expectedOwner);
