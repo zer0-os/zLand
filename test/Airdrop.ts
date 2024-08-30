@@ -26,7 +26,7 @@ import {
       const root = tree.root;
   
       const LandToken = await hre.ethers.getContractFactory("LandToken");
-      const landToken = await LandToken.deploy(root, "LandToken", "LND");
+      const landToken = await LandToken.deploy("LandToken", "LND", root);
   
       return { landToken, owner, addr1, addr2, tree, values };
     }
@@ -38,17 +38,30 @@ import {
       });
     });
   
-    describe("Claims", function () {
+    describe("Issue Tokens", function () {
+      const testURI = "ar://0hMSgsrg-C4rD8iQOmApcxEpwN-ilDXWa8Lv6I2_TCM";
+      let totalGasUsed: bigint = 0n; // Initialize total gas used to zero as bigint
+  
       for (let i = 0; i < 4444; i++) {
-        it(`Should allow claiming token ${i} and check the owner`, async function () {
+        it(`Should allow issuing token ${i} and check the owner`, async function () {
           const { landToken, addr1, tree, values } = await loadFixture(deployLandTokenFixture);
   
           const entry = values[i];
           const proof = tree.getProof([entry.address, entry.id]);
           const tokenId = parseInt(entry.id);
   
-          // Claim the token
-          await landToken.connect(addr1).claim(proof, entry.address, tokenId);
+          // Issue the token and capture the transaction
+          const tx = await landToken.issue(proof, entry.address, tokenId, testURI);
+  
+          // Wait for the transaction to be mined and get the receipt
+          const receipt = await tx.wait();
+  
+          if (receipt) {
+            // Accumulate gas used
+            totalGasUsed += BigInt(receipt.gasUsed.toString());
+          } else {
+            console.warn(`Transaction for token ${tokenId} did not return a receipt.`);
+          }
   
           // Normalize both addresses using ethers.utils.getAddress
           const actualOwner = ethers.getAddress(await landToken.ownerOf(tokenId));
@@ -58,7 +71,7 @@ import {
           expect(actualOwner).to.equal(expectedOwner);
         });
   
-        it(`Should revert when trying to claim token ${i} with an invalid proof`, async function () {
+        it(`Should revert when trying to issue token ${i} with an invalid proof`, async function () {
           const { landToken, addr2, values } = await loadFixture(deployLandTokenFixture);
           const invalidProof: string[] = []; // Empty array as an invalid proof
           
@@ -66,26 +79,31 @@ import {
           const tokenId = parseInt(entry.id);
   
           await expect(
-            landToken.connect(addr2).claim(invalidProof, entry.address, tokenId)
+            landToken.issue(invalidProof, entry.address, tokenId, testURI)
           ).to.be.revertedWithCustomError(landToken, "INVALID_PROOF");
         });
   
-        it(`Should revert when trying to claim token ${i} again`, async function () {
+        it(`Should revert when trying to issue token ${i} again`, async function () {
           const { landToken, addr1, tree, values } = await loadFixture(deployLandTokenFixture);
   
           const entry = values[i];
           const proof = tree.getProof([entry.address, entry.id]);
           const tokenId = parseInt(entry.id);
   
-          // Claim the token
-          await landToken.connect(addr1).claim(proof, entry.address, tokenId);
+          // Issue the token
+          await landToken.issue(proof, entry.address, tokenId, testURI);
   
-          // Try to claim it again and expect a revert
+          // Try to issue it again and expect a revert
           await expect(
-            landToken.connect(addr1).claim(proof, entry.address, tokenId)
+            landToken.issue(proof, entry.address, tokenId, testURI)
           ).to.be.revertedWithCustomError(landToken, "ID_CLAIMED");
         });
       }
+  
+      // After all tests, log the total gas used
+      after(async function () {
+        console.log(`Total gas used for issuing tokens: ${totalGasUsed}`);
+      });
     });
   });
   
