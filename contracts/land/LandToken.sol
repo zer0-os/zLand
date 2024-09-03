@@ -1,21 +1,25 @@
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-contract LandToken is ERC721 {
+
+contract LandToken is ERC721, Ownable {
     error ID_CLAIMED(uint256 tokenId, address owner);
     error INVALID_PROOF(bytes32[] proof);
     error NONEXISTENT_ID(uint256 tokenId);
 
+    string public contractURI;
+    string public baseURI;
     bytes32 public root;
-    string private _baseTokenURI; // Base URI for all tokens
 
     mapping(uint => bool) public claimed;
 
-    constructor(string memory name, string memory symbol, string memory baseURI, bytes32 merkleRoot) ERC721(name, symbol) {
+    constructor(string memory name, string memory symbol, string memory _contractURI, string memory _baseURI, bytes32 merkleRoot) ERC721(name, symbol) Ownable(msg.sender){
         root = merkleRoot;
-        _baseTokenURI = baseURI;
+        baseURI = _baseURI;
+        contractURI = _contractURI;
     }
 
     function issue(
@@ -41,6 +45,10 @@ contract LandToken is ERC721 {
         if(ownerOf(tokenId) == address(0)){
             revert NONEXISTENT_ID(tokenId);
         }
-        return string.concat(_baseTokenURI, Strings.toString(tokenId));
+        return string.concat(baseURI, Strings.toString(tokenId));
+    }
+
+    function setContractURI(string calldata newContractURI) public onlyOwner() {
+        contractURI = newContractURI;
     }
 }
