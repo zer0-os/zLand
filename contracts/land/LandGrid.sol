@@ -1,10 +1,10 @@
 pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-contract Land is ERC721{
+contract LandGrid {
     uint256 land_wei_price = 1000000000000;
     uint256 unit_wei_price = 10000000000;
     uint256 unit_gold_price = 100000;
@@ -32,8 +32,9 @@ contract Land is ERC721{
 	mapping(address => bool) public withdrew;
 	mapping(int64 => mapping(int64 => uint256)) market_price;
 
-	constructor (IERC4626 resource_token, string memory name, string memory symbol) ERC721(name, symbol){
+	constructor (IERC4626 resource_token){
 		deployed_at_block = block.number;
+
 		resourceToken = resource_token;
 	}
 
