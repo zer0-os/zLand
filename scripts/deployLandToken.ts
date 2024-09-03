@@ -22,24 +22,25 @@ async function main() {
   console.log(`Deploying LandToken with the account: ${wallet.address}`);
 
   // Deploy the contract
+
+  const baseURI = "ar://0hMSgsrg-C4rD8iQOmApcxEpwN-ilDXWa8Lv6I2_TCM/";
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
-  const landToken = await LandToken.deploy("LandToken", "LND", root);
+  const landToken = await LandToken.deploy("LandToken", "LND", baseURI, root);
 
   //await landToken.deployed();
-  const landAddr = landToken.getAddress();
+  const landAddr = await landToken.getAddress();
   console.log(`LandToken deployed to: ${landAddr}`);
 
   // Issue a few tokens
-  const numberOfTokensToIssue = 3; // Change this number to issue more or fewer tokens
-  const tokenURI = "ar://0hMSgsrg-C4rD8iQOmApcxEpwN-ilDXWa8Lv6I2_TCM"; // Test URI
+  const numberOfTokensToIssue = 2; // Change this number to issue more or fewer tokens
 
   for (let i = 0; i < numberOfTokensToIssue; i++) {
     const entry = values[i];
     const proof = tree.getProof([entry.address, entry.id]);
     const tokenId = parseInt(entry.id);
 
-    console.log(`Issuing token ${tokenId} to ${entry.address} with URI ${tokenURI}`);
-    await landToken.connect(wallet).issue(proof, entry.address, tokenId, tokenURI);
+    console.log(`Issuing token ${tokenId} to ${entry.address}`);
+    await landToken.connect(wallet).issue(proof, entry.address, tokenId);
   }
 
   console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);

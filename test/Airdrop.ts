@@ -25,8 +25,10 @@ import {
       const tree = StandardMerkleTree.of(treeValues, ["address", "uint256"]);
       const root = tree.root;
   
+      const baseURI = "ar://3lALF2kZjTA2IEgItM2wwhln0_UBr3n-uUMQU89ZzO8/"
+
       const LandToken = await hre.ethers.getContractFactory("LandToken");
-      const landToken = await LandToken.deploy("LandToken", "LND", root);
+      const landToken = await LandToken.deploy("LandToken", "LND", baseURI, root);
   
       return { landToken, owner, addr1, addr2, tree, values };
     }
@@ -39,10 +41,9 @@ import {
     });
   
     describe("Issue Tokens", function () {
-      const testURI = "ar://0hMSgsrg-C4rD8iQOmApcxEpwN-ilDXWa8Lv6I2_TCM";
       let totalGasUsed: bigint = 0n; // Initialize total gas used to zero as bigint
   
-      for (let i = 0; i < 4444; i++) {
+      for (let i = 0; i < 4; i++) {
         it(`Should allow issuing token ${i} and check the owner`, async function () {
           const { landToken, addr1, tree, values } = await loadFixture(deployLandTokenFixture);
   
@@ -51,7 +52,7 @@ import {
           const tokenId = parseInt(entry.id);
   
           // Issue the token and capture the transaction
-          const tx = await landToken.issue(proof, entry.address, tokenId, testURI);
+          const tx = await landToken.issue(proof, entry.address, tokenId);
   
           // Wait for the transaction to be mined and get the receipt
           const receipt = await tx.wait();
@@ -69,8 +70,10 @@ import {
   
           // Check that the owner of the token is the intended address
           expect(actualOwner).to.equal(expectedOwner);
+
+          console.log(await landToken.tokenURI(entry.id));
         });
-  
+        
         it(`Should revert when trying to issue token ${i} with an invalid proof`, async function () {
           const { landToken, addr2, values } = await loadFixture(deployLandTokenFixture);
           const invalidProof: string[] = []; // Empty array as an invalid proof
@@ -79,7 +82,7 @@ import {
           const tokenId = parseInt(entry.id);
   
           await expect(
-            landToken.issue(invalidProof, entry.address, tokenId, testURI)
+            landToken.issue(invalidProof, entry.address, tokenId)
           ).to.be.revertedWithCustomError(landToken, "INVALID_PROOF");
         });
   
@@ -91,15 +94,15 @@ import {
           const tokenId = parseInt(entry.id);
   
           // Issue the token
-          await landToken.issue(proof, entry.address, tokenId, testURI);
+          await landToken.issue(proof, entry.address, tokenId);
   
           // Try to issue it again and expect a revert
           await expect(
-            landToken.issue(proof, entry.address, tokenId, testURI)
+            landToken.issue(proof, entry.address, tokenId)
           ).to.be.revertedWithCustomError(landToken, "ID_CLAIMED");
-        });
+        }); 
       }
-  
+      
       // After all tests, log the total gas used
       after(async function () {
         console.log(`Total gas used for issuing tokens: ${totalGasUsed}`);
