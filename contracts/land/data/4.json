@@ -1,15 +1,15 @@
 {
     "description": "A plot of wild land.",
-    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
-    "name": "FL-2",
+    "image": "ar://u__Sgpnj08H04BamtVwaUD6HJKjBT9u94wviRzOiD7M",
+    "name": "SM-2",
     "attributes": [
         {
             "trait_type": "Neighborhood",
-            "value": "Flashing Lights"
+            "value": "Space Mind"
         },
         {
             "trait_type": "Zoning",
-            "value": "COMMERCIAL"
+            "value": "INDUSTRIAL"
         },
         {
             "trait_type": "Titlesize",
@@ -29,7 +29,7 @@
         },
         {
             "trait_type": "Distancetobay",
-            "value": "1 - 300"
+            "value": "301 - 600"
         }
     ]
 }

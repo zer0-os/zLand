@@ -25,10 +25,11 @@ import {
       const tree = StandardMerkleTree.of(treeValues, ["address", "uint256"]);
       const root = tree.root;
   
+      const contractURI = "ar://zApSefQk3L8xFO1_WVVuFsgAMKbYfjv_YZD87q9EcO0/landData/contract";
       const baseURI = "ar://3lALF2kZjTA2IEgItM2wwhln0_UBr3n-uUMQU89ZzO8/"
 
       const LandToken = await hre.ethers.getContractFactory("LandToken");
-      const landToken = await LandToken.deploy("LandToken", "LND", baseURI, root);
+      const landToken = await LandToken.deploy("LandToken", "LND", contractURI, baseURI, root);
   
       return { landToken, owner, addr1, addr2, tree, values };
     }

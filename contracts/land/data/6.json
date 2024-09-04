@@ -1,19 +1,19 @@
 {
     "description": "A plot of wild land.",
-    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
-    "name": "FL-2",
+    "image": "ar://uOqNmJ0C5TwgrUZIO_m-PzYoz3asImnNJ4NpdVxzrXY",
+    "name": "LM-9",
     "attributes": [
         {
             "trait_type": "Neighborhood",
-            "value": "Flashing Lights"
+            "value": "Little Meow"
         },
         {
             "trait_type": "Zoning",
-            "value": "COMMERCIAL"
+            "value": "RESIDENTIAL"
         },
         {
             "trait_type": "Titlesize",
-            "value": "2401 - 3600"
+            "value": "1 - 1200"
         },
         {
             "trait_type": "Minbuildingheight",
@@ -25,11 +25,11 @@
         },
         {
             "trait_type": "Distancetoocean",
-            "value": "600+"
+            "value": "301 - 600"
         },
         {
             "trait_type": "Distancetobay",
-            "value": "1 - 300"
+            "value": "600+"
         }
     ]
 }

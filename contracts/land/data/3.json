@@ -1,11 +1,11 @@
 {
     "description": "A plot of wild land.",
-    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
-    "name": "FL-2",
+    "image": "ar://ei2l3N4Ed2JgAzFOPZ8ovao4HYEYCHvpmosOsIdR9JA",
+    "name": "NX-26",
     "attributes": [
         {
             "trait_type": "Neighborhood",
-            "value": "Flashing Lights"
+            "value": "Nexus"
         },
         {
             "trait_type": "Zoning",
@@ -13,7 +13,7 @@
         },
         {
             "trait_type": "Titlesize",
-            "value": "2401 - 3600"
+            "value": "1 - 1200"
         },
         {
             "trait_type": "Minbuildingheight",
@@ -29,7 +29,7 @@
         },
         {
             "trait_type": "Distancetobay",
-            "value": "1 - 300"
+            "value": "301 - 600"
         }
     ]
 }

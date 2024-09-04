@@ -1,11 +1,11 @@
 {
     "description": "A plot of wild land.",
-    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
-    "name": "FL-2",
+    "image": "ar://DrN_a6wsY_XjllX84HkNkS_JGTsHOI5tUOysHN5IuS8",
+    "name": "TG-622",
     "attributes": [
         {
             "trait_type": "Neighborhood",
-            "value": "Flashing Lights"
+            "value": "Tranquility Gardens"
         },
         {
             "trait_type": "Zoning",
@@ -13,7 +13,7 @@
         },
         {
             "trait_type": "Titlesize",
-            "value": "2401 - 3600"
+            "value": "1 - 1200"
         },
         {
             "trait_type": "Minbuildingheight",

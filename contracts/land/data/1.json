@@ -1,44 +1,35 @@
 {
-    "tag": "1111",
-    "domain": "",
-    "metadata": {
-        "animation_url": "",
-        "image_url": "",
-        "cardname": "FF-1111",
-        "attributes": [
-            {
-                "trait_type": "robot",
-                "value": "rock"
-            },
-            {
-                "trait_type": "Zwegwe",
-                "value": "fewfew"
-            },
-            {
-                "trait_type": "Titlesize",
-                "value": "14021 - 26002"
-            },
-            {
-                "trait_type": "Mbh",
-                "value": "1125125"
-            },
-            {
-                "trait_type": "Mbhx",
-                "value": "1125"
-            },
-            {
-                "trait_type": "Dto",
-                "value": "3012323"
-            },
-            {
-                "trait_type": "Dtob",
-                "value": "6145"
-            },
-            {
-                "display_type": "number",
-                "value": "123456",
-                "trait_type": "Test Stat"
-            }
-        ]
-    }
+    "description": "A plot of wild land.",
+    "image": "ar://Uh5RzQmT1AMsLbxiQLchKfnkZ16_6jPQO9efEb9BiYI",
+    "name": "NS-905",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "North Star"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "INDUSTRIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "2401 - 3600"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "301 - 600"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "600+"
+        }
+    ]
 }
