@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://uOqNmJ0C5TwgrUZIO_m-PzYoz3asImnNJ4NpdVxzrXY",
+    "name": "LM-9",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Little Meow"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "RESIDENTIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "1 - 1200"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "301 - 600"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "600+"
+        }
+    ]
+}

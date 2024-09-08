@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://ZEUT87NIPjZZ7kdsI1duiA2knDIoi5eWj3mmtH9T_HQ",
+    "name": "DZ-20",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "District ZERO"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "MIXED USE"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "3601 - 4800"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "301 - 600"
+        }
+    ]
+}

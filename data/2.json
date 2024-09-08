@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
+    "name": "FL-2",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Flashing Lights"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "COMMERCIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "2401 - 3600"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "1 - 300"
+        }
+    ]
+}

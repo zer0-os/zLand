@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://u__Sgpnj08H04BamtVwaUD6HJKjBT9u94wviRzOiD7M",
+    "name": "SM-2",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Space Mind"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "INDUSTRIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "2401 - 3600"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "301 - 600"
+        }
+    ]
+}

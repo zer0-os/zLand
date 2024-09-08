@@ -23,9 +23,8 @@ async function main() {
 
   // Deploy the contract
   const contractURI = "ar://M5cEqycG5rjjmmDbeL8zu9gRRn6U3-sPVnDevb49l3c";
-  const baseURI = "ar://021r9_E0rh9dyNvj6WPkZMtqn346eC57mN1Q6HXK0Fs/";
-  const LandToken = await ethers.getContractFactory("LandToken", wallet);
-  const landToken = await LandToken.deploy("LandToken", "LND", contractURI, baseURI, root);
+  const LandToken = await ethers.getContractFactory("WWIsland", wallet);
+  const landToken = await LandToken.deploy("WWIsland", "LAND", root, contractURI);
 
   //await landToken.deployed();
   const landAddr = await landToken.getAddress();
@@ -40,7 +39,7 @@ async function main() {
     const tokenId = parseInt(entry.id);
 
     console.log(`Issuing token ${tokenId} to ${entry.address}`);
-    await landToken.connect(wallet).issue(proof, entry.address, tokenId);
+    await landToken.connect(wallet).issue(proof, entry.address, tokenId, entry.uri);
   }
 
   console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);

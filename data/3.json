@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://ei2l3N4Ed2JgAzFOPZ8ovao4HYEYCHvpmosOsIdR9JA",
+    "name": "NX-26",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Nexus"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "COMMERCIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "1 - 1200"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "301 - 600"
+        }
+    ]
+}

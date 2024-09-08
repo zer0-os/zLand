@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://XAXViNZFrT8IWI7GqEGJCChslV-bQl3mCqfqQUALA4U",
+    "name": "HH-936",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Haven Heights"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "RESIDENTIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "1 - 1200"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "301 - 600"
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://Uh5RzQmT1AMsLbxiQLchKfnkZ16_6jPQO9efEb9BiYI",
+    "name": "NS-905",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "North Star"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "INDUSTRIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "2401 - 3600"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "301 - 600"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "600+"
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "description": "A plot of wild land.",
+    "image": "ar://DrN_a6wsY_XjllX84HkNkS_JGTsHOI5tUOysHN5IuS8",
+    "name": "TG-622",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Tranquility Gardens"
+        },
+        {
+            "trait_type": "Zoning",
+            "value": "COMMERCIAL"
+        },
+        {
+            "trait_type": "Titlesize",
+            "value": "1 - 1200"
+        },
+        {
+            "trait_type": "Minbuildingheight",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Maxbuildingheigh",
+            "value": "1 - 19"
+        },
+        {
+            "trait_type": "Distancetoocean",
+            "value": "600+"
+        },
+        {
+            "trait_type": "Distancetobay",
+            "value": "1 - 300"
+        }
+    ]
+}
