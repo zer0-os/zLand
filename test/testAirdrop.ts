@@ -166,4 +166,50 @@ describe("LandToken", function () {
       expect(royaltyAmount).to.equal(500); // Expect 500 units as 5% of 10,000
     });
   });
+
+  // NEW TESTS FOR `tokenURI` LOGIC
+  describe("Custom Token URI Logic", function () {
+    it("Should return baseURI + tokenId when no custom URI is set", async function () {
+      const { landToken, addr1, tree, values } = await loadFixture(deployLandTokenFixture);
+
+      const entry = values[0];
+      const proof = tree.getProof([entry.address, entry.id]);
+      const tokenId = parseInt(entry.id);
+
+      // Issue token
+      await landToken.issue(proof, entry.address, tokenId);
+
+      const expectedURI = `ar://3lALF2kZjTA2IEgItM2wwhln0_UBr3n-uUMQU89ZzO8/${tokenId}`;
+      const actualURI = await landToken.tokenURI(tokenId);
+
+      expect(actualURI).to.equal(expectedURI);
+    });
+
+    it("Should return custom URI if set", async function () {
+      const { landToken, addr1, tree, values } = await loadFixture(deployLandTokenFixture);
+
+      const entry = values[0];
+      const proof = tree.getProof([entry.address, entry.id]);
+      const tokenId = parseInt(entry.id);
+
+      // Issue token
+      await landToken.issue(proof, entry.address, tokenId);
+
+      const customURI = "ar://custom-uri-for-token-1";
+      await landToken._setTokenURI(tokenId, customURI); // Set a custom URI for the token
+
+      const actualURI = await landToken.tokenURI(tokenId);
+      expect(actualURI).to.equal(customURI);
+    });
+
+    it("Should revert when setting URI for a non-existent token", async function () {
+      const { landToken } = await loadFixture(deployLandTokenFixture);
+      const nonExistentTokenId = 9999;
+      const customURI = "ar://custom-uri-non-existent";
+
+      await expect(
+        landToken._setTokenURI(nonExistentTokenId, customURI)
+      ).to.be.revertedWithCustomError(landToken, "NONEXISTENT_ID");
+    });
+  });
 });
