@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /**
@@ -33,7 +33,7 @@ contract LandToken is ERC721, Ownable {
     bytes32 public root;
 
     /// @notice Mapping of token IDs to their claimed status.
-    mapping(uint => bool) public claimed;
+    mapping(uint => bool) public issued;
 
     /**
      * @notice Constructor to initialize the LandToken contract.
@@ -71,14 +71,14 @@ contract LandToken is ERC721, Ownable {
     ) public {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
         
-        if (claimed[tokenId]) {
+        if (issued[tokenId]) {
             revert ID_CLAIMED(tokenId, ownerOf(tokenId));
         }
         if (!MerkleProof.verify(proof, root, leaf)) {
             revert INVALID_PROOF(proof);
         }
         
-        claimed[tokenId] = true;
+        issued[tokenId] = true;
         _safeMint(recipient, tokenId);
     }
 
@@ -103,5 +103,15 @@ contract LandToken is ERC721, Ownable {
      */
     function setContractURI(string calldata newContractURI) public onlyOwner {
         contractURI = newContractURI;
+    }
+
+
+    /**
+     * @notice Updates the token base metadata URI.
+     * @dev Only the owner can call this function.
+     * @param newBaseURI The new base URI to be set.
+     */
+    function setBaseURI(string calldata newBaseURI) public onlyOwner {
+        baseURI = newBaseURI;
     }
 }
