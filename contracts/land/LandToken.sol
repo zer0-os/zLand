@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "";
+import "../../lib/creator-token-contracts/contracts/access/OwnableBasic.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "../../lib/creator-token-contracts/contracts/erc721c/ERC721C.sol";
+import "../../lib/creator-token-contracts/contracts/programmable-royalties/BasicRoyalties.sol";
 
 /**
  * @title LandToken
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
  */
-contract LandToken is ERC721, Ownable {
+contract LandToken is OwnableBasic, ERC721C, BasicRoyalties {
     /// @dev Thrown when trying to issue a token that has already been claimed.
     /// @param tokenId The ID of the token that has already been claimed.
     /// @param owner The current owner of the token.
@@ -44,17 +45,25 @@ contract LandToken is ERC721, Ownable {
      * @param merkleRoot The root of the Merkle tree for claim validation.
      */
     constructor(
-        string memory name, 
-        string memory symbol, 
+        address royaltyReceiver_,
+        uint96 royaltyFeeNumerator_,
+        string memory name,
+        string memory symbol,
         string memory _contractURI, 
         string memory _baseURI, 
-        bytes32 merkleRoot
-    ) ERC721(name, symbol) Ownable(msg.sender) {
+        bytes32 merkleRoot)
+        ERC721OpenZeppelin(name, symbol) 
+        BasicRoyalties(royaltyReceiver_, royaltyFeeNumerator_) 
+    {
         root = merkleRoot;
         baseURI = _baseURI;
         contractURI = _contractURI;
     }
-
+    
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721C, ERC2981) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    
+    }
     /**
      * @notice Issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
      * @dev This function verifies the Merkle proof before minting the token.
@@ -90,7 +99,7 @@ contract LandToken is ERC721, Ownable {
      * @custom:throws NONEXISTENT_ID if the token ID does not exist.
      */
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        if (ownerOf(tokenId) == address(0)) {
+        if (!_exists(tokenId)) {
             revert NONEXISTENT_ID(tokenId);
         }
         return string.concat(baseURI, Strings.toString(tokenId));
@@ -101,7 +110,8 @@ contract LandToken is ERC721, Ownable {
      * @dev Only the owner can call this function.
      * @param newContractURI The new contract URI to be set.
      */
-    function setContractURI(string calldata newContractURI) public onlyOwner {
+    function setContractURI(string calldata newContractURI) public {
+        _requireCallerIsContractOwner();
         contractURI = newContractURI;
     }
 
@@ -111,7 +121,33 @@ contract LandToken is ERC721, Ownable {
      * @dev Only the owner can call this function.
      * @param newBaseURI The new base URI to be set.
      */
-    function setBaseURI(string calldata newBaseURI) public onlyOwner {
+    function setBaseURI(string calldata newBaseURI) public {
+        _requireCallerIsContractOwner();
         baseURI = newBaseURI;
+    }
+
+    /**
+     * @notice Updates the default royalty basis points for all tokens.
+     * @dev Only the contract owner can call this function. 
+     * This function sets a default royalty that applies to all tokens if no specific token royalty is set.
+     * @param receiver The address to receive the royalty payments.
+     * @param feeNumerator The royalty fee in basis points.
+     */
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public {
+        _requireCallerIsContractOwner();
+        _setDefaultRoyalty(receiver, feeNumerator);
+    }
+
+    /**
+     * @notice Updates the royalty basis points for a specific token.
+     * @dev Only the contract owner can call this function.
+     * This function sets a custom royalty for a specific token, overriding the default royalty.
+     * @param tokenId The ID of the token for which the royalty is being set.
+     * @param receiver The address to receive the royalty payments for the specified token.
+     * @param feeNumerator The royalty fee in basis points.
+     */
+    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public {
+        _requireCallerIsContractOwner();
+        _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 }
