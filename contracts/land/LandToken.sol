@@ -1,17 +1,62 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import { OwnableBasic } from "../../lib/creator-token-contracts/contracts/access/OwnableBasic.sol";
-import { ERC721C, ERC721OpenZeppelin, Strings } from "../../lib/creator-token-contracts/contracts/erc721c/ERC721C.sol";
 import { BasicRoyalties, ERC2981 } from "../../lib/creator-token-contracts/contracts/programmable-royalties/BasicRoyalties.sol";
 import { ILandToken } from "./ILandToken.sol";
+import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
+import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import { ERC721C, ERC721OpenZeppelin, ERC721OpenZeppelinBase } from "../../lib/creator-token-contracts/contracts/erc721c/ERC721C.sol";
+import { ERC721Votes, ERC721, EIP712 } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Votes.sol";
+
+/**
+ * @title ERC721CVotes
+ * @dev Combines ERC721C and ERC721Votes to resolve inheritance conflicts.
+ */
+abstract contract ERC721CVotes is ERC721C, ERC721Votes {
+    // Override required functions to resolve conflicts
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 batchSize
+    ) internal virtual override(ERC721C, ERC721Votes) {
+        super._afterTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 batchSize
+    ) internal virtual override(ERC721, ERC721C) {
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721C, ERC721)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function name() public view virtual override(ERC721OpenZeppelinBase, ERC721) returns (string memory) {
+        return super.name();
+    }
+
+    function symbol() public view virtual override(ERC721OpenZeppelinBase, ERC721) returns (string memory) {
+        return super.symbol();
+    }
+}
 
 /**
  * @title LandToken
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
  */
-contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
+contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
     /// @dev Thrown when trying to issue a token that has already been claimed.
     /// @param tokenId The ID of the token that has already been claimed.
     /// @param owner The current owner of the token.
@@ -35,7 +80,7 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
     bytes32 public root;
 
     /// @notice Per-token URIs
-    mapping(uint id => string uri) private tokenURIs;
+    mapping(uint256 => string) private tokenURIs;
 
     /// @notice Event emitted when the base URI is updated
     event BaseURISet(string newBaseURI);
@@ -45,8 +90,10 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
 
     /**
      * @notice Constructor to initialize the LandToken contract.
-     * @param name The name of the token collection.
-     * @param symbol The symbol of the token collection.
+     * @param royaltyReceiver_ The address to receive royalty payments.
+     * @param royaltyFeeNumerator_ The royalty fee numerator (out of 10,000).
+     * @param name_ The name of the token collection.
+     * @param symbol_ The symbol of the token collection.
      * @param _contractURI The URI pointing to contract-level metadata.
      * @param _baseURI The base URI for token metadata.
      * @param merkleRoot The root of the Merkle tree for claim validation.
@@ -54,22 +101,19 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
     constructor(
         address royaltyReceiver_,
         uint96 royaltyFeeNumerator_,
-        string memory name,
-        string memory symbol,
-        string memory _contractURI, 
-        string memory _baseURI, 
+        string memory name_,
+        string memory symbol_,
+        string memory _contractURI,
+        string memory _baseURI,
         bytes32 merkleRoot
     )
-        ERC721OpenZeppelin(name, symbol)
+        ERC721OpenZeppelin(name_, symbol_)
         BasicRoyalties(royaltyReceiver_, royaltyFeeNumerator_)
+        EIP712(name_, "1")
     {
         root = merkleRoot;
         baseURI = _baseURI;
         contractURI = _contractURI;
-    }
-
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721C, ERC2981) returns (bool) {
-        return super.supportsInterface(interfaceId);
     }
 
     /**
@@ -82,7 +126,7 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
     function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override {
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
+        bytes32 leaf = keccak256(abi.encodePacked(recipient, tokenId));
 
         if (_exists(tokenId)) {
             revert ID_CLAIMED(tokenId, ownerOf(tokenId));
@@ -108,7 +152,7 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
 
         string memory _tokenURI = tokenURIs[tokenId];
         if (bytes(_tokenURI).length == 0) {
-            return string.concat(baseURI, Strings.toString(tokenId));
+            return string(abi.encodePacked(baseURI, Strings.toString(tokenId)));
         }
 
         return _tokenURI;
@@ -173,5 +217,16 @@ contract LandToken is OwnableBasic, ERC721C, BasicRoyalties, ILandToken {
         }
         _requireCallerIsContractOwner();
         tokenURIs[tokenId] = _tokenURI;
+    }
+
+    // Override supportsInterface to resolve inheritance conflicts
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721CVotes, ERC2981)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }
