@@ -5,10 +5,8 @@ import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
-import "./LandToken.sol"; // Your ERC721Votes token contract
-import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 
 /**
  * @title LandGovernor
@@ -19,11 +17,10 @@ contract LandGovernor is
     GovernorSettings,
     GovernorCountingSimple,
     GovernorVotes,
-    GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
     constructor(
-        LandToken _token,
+        address _token,
         TimelockController _timelock
     )
         Governor("LandGovernor")
@@ -33,12 +30,9 @@ contract LandGovernor is
             1         // Proposal threshold: 1 token
         )
         GovernorVotes(IVotes(address(_token)))
-        GovernorVotesQuorumFraction(4) // Quorum fraction: 4%
         GovernorTimelockControl(_timelock)
     {}
-
-    // The following functions are overrides required by Solidity.
-
+    
     function votingDelay()
         public
         view
@@ -60,10 +54,10 @@ contract LandGovernor is
     function quorum(uint256 blockNumber)
         public
         view
-        override(IGovernor, GovernorVotesQuorumFraction)
+        override
         returns (uint256)
     {
-        return super.quorum(blockNumber);
+        return 100;
     }
 
     function proposalThreshold()
