@@ -10,14 +10,15 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFractio
 
 /**
  * @title LandGovernor
- * @dev Governance contract using LandToken (ERC721Votes) for voting.
+ * @dev Governance contract using LandToken (ERC721CVotes) for voting.
  */
 contract LandGovernor is
     Governor,
     GovernorSettings,
     GovernorCountingSimple,
     GovernorVotes,
-    GovernorTimelockControl
+    GovernorTimelockControl,
+    GovernorVotesQuorumFraction
 {
     constructor(
         address _token,
@@ -31,6 +32,7 @@ contract LandGovernor is
         )
         GovernorVotes(IVotes(address(_token)))
         GovernorTimelockControl(_timelock)
+        GovernorVotesQuorumFraction(100)
     {}
     
     function votingDelay()
@@ -54,10 +56,10 @@ contract LandGovernor is
     function quorum(uint256 blockNumber)
         public
         view
-        override
+        override(IGovernor, GovernorVotesQuorumFraction)
         returns (uint256)
     {
-        return 100;
+        return super.quorum(blockNumber);
     }
 
     function proposalThreshold()

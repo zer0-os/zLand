@@ -5,7 +5,15 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      optimizer: {
+        enabled: true,   // Enable the optimizer
+        runs: 200        // Adjust the number of optimization runs (200 is a common default)
+      }
+    }
+  },
   networks: {
     localhost: {
       url: "http://127.0.0.1:8545"

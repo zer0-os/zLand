@@ -6,51 +6,7 @@ import { BasicRoyalties, ERC2981 } from "../../lib/creator-token-contracts/contr
 import { ILandToken } from "./ILandToken.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import { ERC721C, ERC721OpenZeppelin, ERC721OpenZeppelinBase } from "../../lib/creator-token-contracts/contracts/erc721c/ERC721C.sol";
-import { ERC721Votes, ERC721, EIP712 } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Votes.sol";
-
-/**
- * @title ERC721CVotes
- * @dev Combines ERC721C and ERC721Votes to resolve inheritance conflicts.
- */
-abstract contract ERC721CVotes is ERC721C, ERC721Votes {
-    // Override required functions to resolve conflicts
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal virtual override(ERC721C, ERC721Votes) {
-        super._afterTokenTransfer(from, to, tokenId, batchSize);
-    }
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal virtual override(ERC721, ERC721C) {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(ERC721C, ERC721)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-    }
-
-    function name() public view virtual override(ERC721OpenZeppelinBase, ERC721) returns (string memory) {
-        return super.name();
-    }
-
-    function symbol() public view virtual override(ERC721OpenZeppelinBase, ERC721) returns (string memory) {
-        return super.symbol();
-    }
-}
+import { ERC721CVotes, ERC721, EIP712 } from "./ERC721CVotes.sol";
 
 /**
  * @title LandToken
@@ -74,10 +30,10 @@ contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
     string public contractURI;
 
     /// @notice Base URI for the token metadata.
-    string public baseURI;
+    string private baseURI;
 
     /// @notice Root of the Merkle tree used to verify issuance eligibility.
-    bytes32 public root;
+    bytes32 public immutable root;
 
     /// @notice Per-token URIs
     mapping(uint256 => string) private tokenURIs;
@@ -107,7 +63,7 @@ contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
         string memory _baseURI,
         bytes32 merkleRoot
     )
-        ERC721OpenZeppelin(name_, symbol_)
+        ERC721(name_, symbol_)
         BasicRoyalties(royaltyReceiver_, royaltyFeeNumerator_)
         EIP712(name_, "1")
     {
