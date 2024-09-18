@@ -83,7 +83,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @custom:throws ID_CLAIMED if the token has already been claimed.
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override {
+    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override onlyOwner {
         bytes32 leaf = keccak256(abi.encodePacked(recipient, tokenId));
 
         if (_exists(tokenId)) {
