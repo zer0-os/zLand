@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 import { CreatorTokenBase, ICreatorToken } from "../../lib/creator-token-contracts/contracts/utils/CreatorTokenBase.sol";
 import { ERC721Votes, ERC721, EIP712 } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Votes.sol";
@@ -11,7 +11,7 @@ import { ERC721Votes, ERC721, EIP712 } from "@openzeppelin/contracts/token/ERC72
  *         allows the contract owner to update the transfer validation logic by managing a security policy in
  *         an external transfer validation security policy registry.  See {CreatorTokenTransferValidator}.
  */
-abstract contract ERC721CVotes is ERC721Votes, CreatorTokenBase {
+abstract contract ERC721VotesC is ERC721Votes, CreatorTokenBase {
 
     function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == type(ICreatorToken).interfaceId || super.supportsInterface(interfaceId);

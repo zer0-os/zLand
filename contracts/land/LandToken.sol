@@ -6,13 +6,13 @@ import { BasicRoyalties, ERC2981 } from "../../lib/creator-token-contracts/contr
 import { ILandToken } from "./ILandToken.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import { ERC721CVotes, ERC721, EIP712 } from "./ERC721CVotes.sol";
+import { ERC721VotesC, ERC721, EIP712 } from "./ERC721VotesC.sol";
 
 /**
  * @title LandToken
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
  */
-contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
+contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     /// @dev Thrown when trying to issue a token that has already been claimed.
     /// @param tokenId The ID of the token that has already been claimed.
     /// @param owner The current owner of the token.
@@ -48,28 +48,30 @@ contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
      * @notice Constructor to initialize the LandToken contract.
      * @param royaltyReceiver_ The address to receive royalty payments.
      * @param royaltyFeeNumerator_ The royalty fee numerator (out of 10,000).
-     * @param name_ The name of the token collection.
-     * @param symbol_ The symbol of the token collection.
-     * @param _contractURI The URI pointing to contract-level metadata.
-     * @param _baseURI The base URI for token metadata.
-     * @param merkleRoot The root of the Merkle tree for claim validation.
+     * @param tokenName_ The name of the token collection.
+     * @param tokenSymbol_ The symbol of the token collection.
+     * @param contractURI_ The URI pointing to contract-level metadata.
+     * @param baseURI_ The base URI for token metadata.
+     * @param version_ The EIP712 contract version identifier
+     * @param root_ The root of the Merkle tree for claim validation.
      */
     constructor(
         address royaltyReceiver_,
         uint96 royaltyFeeNumerator_,
-        string memory name_,
-        string memory symbol_,
-        string memory _contractURI,
-        string memory _baseURI,
-        bytes32 merkleRoot
+        string memory tokenName_,
+        string memory tokenSymbol_,
+        string memory contractURI_,
+        string memory baseURI_,
+        string memory version_,
+        bytes32 root_
     )
-        ERC721(name_, symbol_)
+        ERC721(tokenName_, tokenSymbol_)
         BasicRoyalties(royaltyReceiver_, royaltyFeeNumerator_)
-        EIP712(name_, "1")
+        EIP712(tokenName_, version_)
     {
-        root = merkleRoot;
-        baseURI = _baseURI;
-        contractURI = _contractURI;
+        root = root_;
+        baseURI = baseURI_;
+        contractURI = contractURI_;
     }
 
     /**
@@ -180,7 +182,7 @@ contract LandToken is OwnableBasic, ERC721CVotes, BasicRoyalties, ILandToken {
         public
         view
         virtual
-        override(ERC721CVotes, ERC2981)
+        override(ERC721VotesC, ERC2981)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
