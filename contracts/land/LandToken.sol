@@ -30,7 +30,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     string public contractURI;
 
     /// @notice Base URI for the token metadata.
-    string private baseURI;
+    string public baseURI;
 
     /// @notice Root of the Merkle tree used to verify issuance eligibility.
     bytes32 public immutable root;
@@ -84,7 +84,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
     function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override onlyOwner {
-        bytes32 leaf = keccak256(abi.encodePacked(recipient, tokenId));
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
 
         if (_exists(tokenId)) {
             revert ID_CLAIMED(tokenId, ownerOf(tokenId));
