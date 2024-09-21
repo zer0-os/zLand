@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import { CreatorTokenBase, ICreatorToken } from "../../lib/creator-token-contracts/contracts/utils/CreatorTokenBase.sol";
 import { ERC721Votes, ERC721, EIP712 } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Votes.sol";

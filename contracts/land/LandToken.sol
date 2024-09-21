@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import { OwnableBasic } from "../../lib/creator-token-contracts/contracts/access/OwnableBasic.sol";
 import { BasicRoyalties, ERC2981 } from "../../lib/creator-token-contracts/contracts/programmable-royalties/BasicRoyalties.sol";
@@ -11,6 +11,7 @@ import { ERC721VotesC, ERC721, EIP712 } from "./ERC721VotesC.sol";
 /**
  * @title LandToken
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
+ * @custom:security-contact admin@zer0.tech
  */
 contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     /// @dev Thrown when trying to issue a token that has already been claimed.
@@ -19,8 +20,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     error ID_CLAIMED(uint256 tokenId, address owner);
 
     /// @dev Thrown when a Merkle proof is invalid for the provided recipient and token ID.
-    /// @param proof The Merkle proof that failed validation.
-    error INVALID_PROOF(bytes32[] proof);
+    error INVALID_PROOF();
 
     /// @dev Thrown when querying a token ID that does not exist.
     /// @param tokenId The ID of the token that does not exist.
@@ -83,14 +83,14 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @custom:throws ID_CLAIMED if the token has already been claimed.
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override onlyOwner {
+    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
 
         if (_exists(tokenId)) {
             revert ID_CLAIMED(tokenId, ownerOf(tokenId));
         }
         if (!MerkleProof.verify(proof, root, leaf)) {
-            revert INVALID_PROOF(proof);
+            revert INVALID_PROOF();
         }
 
         _safeMint(recipient, tokenId);
@@ -177,7 +177,10 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
         tokenURIs[tokenId] = _tokenURI;
     }
 
-    // Override supportsInterface to resolve inheritance conflicts
+    /**
+     * @dev Required override, returns supported interface ID
+     * @param interfaceId Supported interface ID
+     */
     function supportsInterface(bytes4 interfaceId)
         public
         view
