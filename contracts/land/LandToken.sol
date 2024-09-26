@@ -75,7 +75,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     }
 
     /**
-     * @notice Issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
+     * @notice User claims a token to a recipient if the Merkle proof is valid and the token has not been claimed.
      * @dev This function verifies the Merkle proof before minting the token.
      * @param proof The Merkle proof that validates the recipient's claim.
      * @param recipient The address of the recipient.
@@ -83,7 +83,29 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @custom:throws ID_CLAIMED if the token has already been claimed.
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override {
+    function claim(bytes32[] memory proof, address recipient, uint256 tokenId) public override {
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
+
+        if (_exists(tokenId)) {
+            revert ID_CLAIMED(tokenId, ownerOf(tokenId));
+        }
+        if (!MerkleProof.verify(proof, root, leaf)) {
+            revert INVALID_PROOF();
+        }
+
+        _safeMint(recipient, tokenId);
+    }
+
+    /**
+     * @notice Admin issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
+     * @dev This function verifies the Merkle proof before minting the token.
+     * @param proof The Merkle proof that validates the recipient's claim.
+     * @param recipient The address of the recipient.
+     * @param tokenId The ID of the token to be issued.
+     * @custom:throws ID_CLAIMED if the token has already been claimed.
+     * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
+     */
+    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) public override onlyOwner{
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
 
         if (_exists(tokenId)) {

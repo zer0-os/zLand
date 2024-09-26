@@ -1,0 +1,67 @@
+{
+    "name": "SM-263",
+    "image": "ar://u__Sgpnj08H04BamtVwaUD6HJKjBT9u94wviRzOiD7M",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/SM-263.mp4",
+    "description": "Space Ming Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Space Mind"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Legendary"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Giga"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Megatall"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Close"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "17192"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "438"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "547"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "87"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "109"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "1574"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "136"
+        }
+    ]
+}

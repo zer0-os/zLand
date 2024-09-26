@@ -2,7 +2,9 @@
 pragma solidity ^0.8.24;
 
 interface ILandToken {
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId) external;
+    function claim(bytes32[] memory proof, address recipient, uint256 tokenId) external;
+
+    function issue(bytes32[] memory proof, address recipient, uint256 tokenId, string memory metadata) external;
 
     function setContractURI(string calldata newContractURI) external;
 

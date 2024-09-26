@@ -1,0 +1,67 @@
+{
+    "name": "DZ-285",
+    "image": "ar://ZEUT87NIPjZZ7kdsI1duiA2knDIoi5eWj3mmtH9T_HQ",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/DZ-285.mp4",
+    "description": "District ZERO Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "District ZERO"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Residential"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Nano"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Lowrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Medium"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Far"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "712"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "16"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "20"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "3"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "4"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "358"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "1413"
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+{
+    "name": "NX-22",
+    "image": "ar://ei2l3N4Ed2JgAzFOPZ8ovao4HYEYCHvpmosOsIdR9JA",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/NX-22.mp4",
+    "description": "Nexus Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Nexus"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Industrial"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Giga"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Lowrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Far"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "13093"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "32"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "40"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "6"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "8"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "713"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "934"
+        }
+    ]
+}

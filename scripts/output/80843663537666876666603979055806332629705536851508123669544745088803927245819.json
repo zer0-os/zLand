@@ -1,0 +1,67 @@
+{
+    "name": "TG-2",
+    "image": "ar://DrN_a6wsY_XjllX84HkNkS_JGTsHOI5tUOysHN5IuS8",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/TG-2.mp4",
+    "description": "Tranquility Garden Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Tranquility Gardens"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Mixed Use"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Mammoth"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Lowrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Close"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "8031"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "60"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "74"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "12"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "14"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "2893"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "100"
+        }
+    ]
+}

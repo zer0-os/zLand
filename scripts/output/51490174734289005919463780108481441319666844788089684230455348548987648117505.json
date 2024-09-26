@@ -1,0 +1,67 @@
+{
+    "name": "FL-200",
+    "image": "ar://GsZWSItOKoAhH7lFTkN8ukKBMEQf-8agWzun49T0zyA",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/FL-200.mp4",
+    "description": "Flashing Lights Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Flashing Lights"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Residential"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Micro"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Lowrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Close"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "1317"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "23"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "28"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "4"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "5"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "2677"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "133"
+        }
+    ]
+}

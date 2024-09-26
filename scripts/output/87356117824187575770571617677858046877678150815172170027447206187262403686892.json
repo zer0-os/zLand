@@ -1,0 +1,67 @@
+{
+    "name": "LM-5",
+    "image": "ar://uOqNmJ0C5TwgrUZIO_m-PzYoz3asImnNJ4NpdVxzrXY",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/LM-5.mp4",
+    "description": "Little Meow Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Little Meow"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Mixed Use"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Mid"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Midrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Close"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "4517"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "94"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "117"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "18"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "23"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "1222"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "210"
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+{
+    "name": "NS-930",
+    "image": "ar://Uh5RzQmT1AMsLbxiQLchKfnkZ16_6jPQO9efEb9BiYI",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/NS-930.mp4",
+    "description": "North Star Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "North Star"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Legendary"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Macro"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Supertall"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Medium"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Far"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "5174"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "344"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "430"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "68"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "86"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "544"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "677"
+        }
+    ]
+}

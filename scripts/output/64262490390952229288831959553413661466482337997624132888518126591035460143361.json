@@ -1,0 +1,67 @@
+{
+    "name": "HH-963",
+    "image": "ar://XAXViNZFrT8IWI7GqEGJCChslV-bQl3mCqfqQUALA4U",
+    "animation_url": "https://wilder-land-cards.s3.amazonaws.com/Folder1/Videos/HH-963.mp4",
+    "description": "Haven Heights Test",
+    "attributes": [
+        {
+            "trait_type": "Neighborhood",
+            "value": "Haven Heights"
+        },
+        {
+            "trait_type": "Zoning Type",
+            "value": "Mixed Use"
+        },
+        {
+            "trait_type": "Plot Size",
+            "value": "Mammoth"
+        },
+        {
+            "trait_type": "Building Size",
+            "value": "Midrise"
+        },
+        {
+            "trait_type": "Distance To Ocean",
+            "value": "Far"
+        },
+        {
+            "trait_type": "Distance To Bay",
+            "value": "Medium"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Plot Area (M²)",
+            "value": "7914"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min Building Height (M)",
+            "value": "155"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max Building Height (M)",
+            "value": "193"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Min # Of Floors",
+            "value": "31"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Max # Of Floors",
+            "value": "38"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Ocean (M)",
+            "value": "782"
+        },
+        {
+            "display_type": "number",
+            "trait_type": "Distance To Bay (M)",
+            "value": "551"
+        }
+    ]
+}

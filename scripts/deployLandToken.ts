@@ -18,6 +18,7 @@ async function main() {
   // Get the deployer's wallet using the PRIVATE_KEY from the environment
   const provider = ethers.provider;
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+  const walletAddr = await wallet.getAddress();
 
   console.log(`Deploying LandToken with the account: ${wallet.address}`);
 
@@ -25,7 +26,7 @@ async function main() {
   const contractURI = "ar://M5cEqycG5rjjmmDbeL8zu9gRRn6U3-sPVnDevb49l3c";
   const baseURI = "ar://021r9_E0rh9dyNvj6WPkZMtqn346eC57mN1Q6HXK0Fs/";
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
-  const landToken = await LandToken.deploy("LandToken", "LND", contractURI, baseURI, root);
+  const landToken = await LandToken.deploy(walletAddr, 0, "LandToken", "LND", contractURI, baseURI, "1", root);
 
   //await landToken.deployed();
   const landAddr = await landToken.getAddress();
