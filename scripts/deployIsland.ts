@@ -35,14 +35,13 @@ async function main() {
   // Issue a few tokens
   const numberOfTokensToIssue = 4444; // Change this number to issue more or fewer tokens
 
-  for (let i = 0; i < numberOfTokensToIssue; i+=44) {
+  for (let i = 0; i <= numberOfTokensToIssue; i+=444) {
     const entry = values[i];
     const proof = tree.getProof([entry.address, entry.id]);
     const tokenId = BigInt(entry.id);
 
     console.log(`Issuing token ${tokenId} to ${entry.address}`);
-    await landToken.connect(wallet).issue(proof, entry.address, tokenId);
-    await landToken.connect(wallet)._setTokenURI(tokenId, entry.uri);
+    await landToken.connect(wallet).issue(proof, entry.address, tokenId, entry.uri);
   }
 
   console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
