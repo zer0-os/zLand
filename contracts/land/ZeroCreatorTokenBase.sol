@@ -246,4 +246,27 @@ abstract contract ZeroCreatorTokenBase is Ownable, TransferValidation, ICreatorT
             transferValidator.applyCollectionTransferPolicy(caller, from, to);
         }
     }
+
+    /**
+     * @dev Post-validates a token transfer, reverting if the transfer is not allowed by this token's security policy.
+     *      Inheriting contracts are responsible for overriding the _afterTokenTransfer function, or its equivalent
+     *      and calling _validateAfterTransfer so that checks can be properly applied during token transfers.
+     *
+     * @dev Throws when the transfer doesn't comply with the collection's transfer policy, if the transferValidator is
+     *      set to a non-zero address.
+     *
+     * @param caller  The address of the caller.
+     * @param from    The address of the sender.
+     * @param to      The address of the receiver.
+     */
+    function _postValidateTransfer(
+        address caller, 
+        address from, 
+        address to, 
+        uint256 /*tokenId*/, 
+        uint256 /*value*/) internal virtual override {
+        if (address(transferValidator) != address(0)) {
+            transferValidator.applyCollectionTransferPolicy(caller, from, to);
+        }
+    }
 }
