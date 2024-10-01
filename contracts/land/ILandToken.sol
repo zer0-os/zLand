@@ -12,5 +12,5 @@ interface ILandToken {
 
     function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) external;
 
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) external;
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) external;
 }

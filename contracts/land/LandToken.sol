@@ -170,7 +170,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @param _tokenURI The URI being set.
      * - `tokenId` must exist.
      */
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) public override {
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public override {
         if (!_exists(tokenId)) {
             revert NONEXISTENT_ID(tokenId);
         }
