@@ -39,10 +39,13 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
     mapping(uint256 => string) private tokenURIs;
 
     /// @notice Event emitted when the base URI is updated
-    event BaseURISet(string newBaseURI);
+    event BaseURIUpdated(string newBaseURI);
+
+    /// @notice ERC-4906 compatible event emitted when individual token URIs are updated
+    event MetadataUpdate(uint256 _tokenId);
 
     /// @notice Event emitted when the contract URI is updated
-    event ContractURISet(string newContractURI);
+    event ContractURIUpdated(string newContractURI);
 
     /**
      * @notice Constructor to initialize the LandToken contract.
@@ -73,7 +76,7 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
         baseURI = baseURI_;
         contractURI = contractURI_;
 
-        //setToDefaultSecurityPolicy();
+        setToDefaultSecurityPolicy();
     }
 
     /**
@@ -150,7 +153,7 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
      */
     function setContractURI(string calldata newContractURI) public override onlyOwner {
         contractURI = newContractURI;
-        emit ContractURISet(newContractURI);
+        emit ContractURIUpdated(newContractURI);
     }
 
     /**
@@ -160,7 +163,7 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
      */
     function setBaseURI(string calldata newBaseURI) public override onlyOwner {
         baseURI = newBaseURI;
-        emit BaseURISet(newBaseURI);
+        emit BaseURIUpdated(newBaseURI);
     }
 
     /**
@@ -197,6 +200,8 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
             revert NONEXISTENT_ID(tokenId);
         }
         tokenURIs[tokenId] = _tokenURI;
+
+        emit MetadataUpdate(tokenId);
     }
 
     /**
