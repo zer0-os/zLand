@@ -72,6 +72,8 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
         root = root_;
         baseURI = baseURI_;
         contractURI = contractURI_;
+
+        setToDefaultSecurityPolicy();
     }
 
     /**
