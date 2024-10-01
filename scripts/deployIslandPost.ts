@@ -23,12 +23,12 @@ async function main() {
 
   // Connect to the deployed LandToken contract
   const LandToken = await ethers.getContractAt("ILandToken", contractAddress, wallet);
-  /*
+  
   // Example: Set the contract URI
-  const newContractURI = "https://new-contract-uri.example.com";
-  await LandToken.setContractURI(newContractURI);
-  console.log(`Contract URI updated to: ${newContractURI}`);
-
+  //const newContractURI = "ar://v0kY7-7qWxPSU2SMga-WV2gN07pU9lRLZFjUwacNlRM";
+  //await LandToken.setContractURI(newContractURI);
+  //console.log(`Contract URI updated to: ${newContractURI}`);
+  /*
   // Example: Set the base URI
   const newBaseURI = "https://new-base-uri.example.com/";
   await LandToken.setBaseURI(newBaseURI);
@@ -54,19 +54,24 @@ async function main() {
   */
   const tree = StandardMerkleTree.of(treeValues, ["address", "uint256"]);
   const root = tree.root;
-
+  
   // Issue tokens in a loop
   const numberOfTokensToIssue = 4444; // Adjust this value as needed
-  for (let i = 0; i < numberOfTokensToIssue; i += 4444) {
+  for (let i = 7; i < numberOfTokensToIssue; i += 444) {
     const entry = values[i];
     const proof = tree.getProof([entry.address, entry.id]);
     const tokenId = BigInt(entry.id);
 
+    console.log(`entry ${i}`);
     console.log(`Issuing token ${tokenId} to ${entry.address}`);
-    await LandToken.issue(proof, entry.address, tokenId, entry.uri);
+    const tx = await LandToken.claim(proof, entry.address, tokenId);
+    await tx.wait();
+    console.log("issued");
+    await LandToken._setTokenURI(tokenId, entry.uri);
+    console.log("set ");
   }
-
-  console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
+  
+  //console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
 }
 
 main().catch((error) => {

@@ -198,6 +198,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
         }
         _requireCallerIsContractOwner();
         tokenURIs[tokenId] = _tokenURI;
+        //MetadataUpdated(tokenId);
     }
 
     /**
