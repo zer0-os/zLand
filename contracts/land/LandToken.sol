@@ -77,6 +77,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     /**
      * @notice Issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
      * @dev This function verifies the Merkle proof before minting the token.
+     * @dev If _burn is implemented, then the ID_CLAIMED revert should be changed to check the proof instead.
      * @param proof The Merkle proof that validates the recipient's claim.
      * @param recipient The address of the recipient.
      * @param tokenId The ID of the token to be issued.
