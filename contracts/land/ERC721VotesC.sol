@@ -43,5 +43,7 @@ abstract contract ERC721VotesC is ERC721Votes, ZeroCreatorTokenBase {
                 ++i;
             }
         }
+
+        super._afterTokenTransfer(from, to, firstTokenId, batchSize);
     }
 }
