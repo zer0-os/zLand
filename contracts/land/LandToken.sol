@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { OwnableBasic } from "../../lib/creator-token-contracts/contracts/access/OwnableBasic.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { BasicRoyalties, ERC2981 } from "../../lib/creator-token-contracts/contracts/programmable-royalties/BasicRoyalties.sol";
 import { ILandToken } from "./ILandToken.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
@@ -13,7 +13,7 @@ import { ERC721VotesC, ERC721, EIP712 } from "./ERC721VotesC.sol";
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
  * @custom:security-contact admin@zer0.tech
  */
-contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
+contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
     /// @dev Thrown when trying to issue a token that has already been claimed.
     /// @param tokenId The ID of the token that has already been claimed.
     /// @param owner The current owner of the token.
@@ -39,10 +39,13 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     mapping(uint256 => string) private tokenURIs;
 
     /// @notice Event emitted when the base URI is updated
-    event BaseURISet(string newBaseURI);
+    event BaseURIUpdated(string newBaseURI);
+
+    /// @notice ERC-4906 compatible event emitted when individual token URIs are updated
+    event MetadataUpdate(uint256 _tokenId);
 
     /// @notice Event emitted when the contract URI is updated
-    event ContractURISet(string newContractURI);
+    event ContractURIUpdated(string newContractURI);
 
     /**
      * @notice Constructor to initialize the LandToken contract.
@@ -72,11 +75,14 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
         root = root_;
         baseURI = baseURI_;
         contractURI = contractURI_;
+
+        setToDefaultSecurityPolicy();
     }
 
     /**
      * @notice User claims a token to a recipient if the Merkle proof is valid and the token has not been claimed.
      * @dev This function verifies the Merkle proof before minting the token.
+     * @dev If _burn is implemented, then the ID_CLAIMED revert should be changed to check the proof instead.
      * @param proof The Merkle proof that validates the recipient's claim.
      * @param recipient The address of the recipient.
      * @param tokenId The ID of the token to be issued.
@@ -97,15 +103,16 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
     }
 
     /**
-     * @notice Admin issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
+     * @notice Issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
      * @dev This function verifies the Merkle proof before minting the token.
+     * @dev If _burn is implemented, then the ID_CLAIMED revert should be changed to check the proof instead.
      * @param proof The Merkle proof that validates the recipient's claim.
      * @param recipient The address of the recipient.
      * @param tokenId The ID of the token to be issued.
      * @custom:throws ID_CLAIMED if the token has already been claimed.
      * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
      */
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId, string memory metadata) public override onlyOwner{
+    function issue(bytes32[] memory proof, address recipient, uint256 tokenId, string memory metadata) public override onlyOwner {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
 
         if (_exists(tokenId)) {
@@ -115,8 +122,8 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
             revert INVALID_PROOF();
         }
 
-        _setTokenURI(tokenId, metadata);
         _safeMint(recipient, tokenId);
+        setTokenURI(tokenId, metadata);
     }
 
     /**
@@ -144,10 +151,9 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @dev Only the owner can call this function.
      * @param newContractURI The new contract URI to be set.
      */
-    function setContractURI(string calldata newContractURI) public override {
-        _requireCallerIsContractOwner();
+    function setContractURI(string calldata newContractURI) public override onlyOwner {
         contractURI = newContractURI;
-        emit ContractURISet(newContractURI);
+        emit ContractURIUpdated(newContractURI);
     }
 
     /**
@@ -155,10 +161,9 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @dev Only the owner can call this function.
      * @param newBaseURI The new base URI to be set.
      */
-    function setBaseURI(string calldata newBaseURI) public override {
-        _requireCallerIsContractOwner();
+    function setBaseURI(string calldata newBaseURI) public override onlyOwner {
         baseURI = newBaseURI;
-        emit BaseURISet(newBaseURI);
+        emit BaseURIUpdated(newBaseURI);
     }
 
     /**
@@ -168,8 +173,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @param receiver The address to receive the royalty payments.
      * @param feeNumerator The royalty fee in basis points.
      */
-    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public override {
-        _requireCallerIsContractOwner();
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public override onlyOwner {
         _setDefaultRoyalty(receiver, feeNumerator);
     }
 
@@ -181,8 +185,7 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @param receiver The address to receive the royalty payments for the specified token.
      * @param feeNumerator The royalty fee in basis points.
      */
-    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public override {
-        _requireCallerIsContractOwner();
+    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public override onlyOwner {
         _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 
@@ -192,13 +195,13 @@ contract LandToken is OwnableBasic, ERC721VotesC, BasicRoyalties, ILandToken {
      * @param _tokenURI The URI being set.
      * - `tokenId` must exist.
      */
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) public override {
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public override onlyOwner {
         if (!_exists(tokenId)) {
             revert NONEXISTENT_ID(tokenId);
         }
-        _requireCallerIsContractOwner();
         tokenURIs[tokenId] = _tokenURI;
-        //MetadataUpdated(tokenId);
+
+        emit MetadataUpdate(tokenId);
     }
 
     /**

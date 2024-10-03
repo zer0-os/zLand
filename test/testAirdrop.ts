@@ -65,7 +65,7 @@ describe("LandToken", function () {
         const tokenId = parseInt(entry.id);
 
         // Issue the token and capture the transaction
-        const tx = await landToken.issue(proof, entry.address, tokenId);
+        const tx = await landToken.claim(proof, entry.address, tokenId);
 
         // Wait for the transaction to be mined and get the receipt
         const receipt = await tx.wait();
@@ -97,7 +97,7 @@ describe("LandToken", function () {
         const tokenId = parseInt(entry.id);
 
         await expect(
-          landToken.issue(invalidProof, entry.address, tokenId)
+          landToken.claim(invalidProof, entry.address, tokenId)
         ).to.be.revertedWithCustomError(landToken, "INVALID_PROOF");
       });
 
@@ -111,11 +111,11 @@ describe("LandToken", function () {
         const tokenId = parseInt(entry.id);
 
         // Issue the token
-        await landToken.issue(proof, entry.address, tokenId);
+        await landToken.claim(proof, entry.address, tokenId);
 
         // Try to issue it again and expect a revert
         await expect(
-          landToken.issue(proof, entry.address, tokenId)
+          landToken.claim(proof, entry.address, tokenId)
         ).to.be.revertedWithCustomError(landToken, "ID_CLAIMED");
       });
     }
