@@ -76,7 +76,7 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
         baseURI = baseURI_;
         contractURI = contractURI_;
 
-        setToDefaultSecurityPolicy();
+        //setToDefaultSecurityPolicy();
     }
 
     /**
@@ -122,8 +122,8 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
             revert INVALID_PROOF();
         }
 
+        tokenURIs[tokenId] = metadata;
         _safeMint(recipient, tokenId);
-        setTokenURI(tokenId, metadata);
     }
 
     /**
@@ -140,7 +140,7 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
 
         string memory _tokenURI = tokenURIs[tokenId];
         if (bytes(_tokenURI).length == 0) {
-            return string(abi.encodePacked(baseURI, Strings.toString(tokenId)));
+            return string(abi.encodePacked(baseURI, Strings.toString(tokenId), ".json"));
         }
 
         return _tokenURI;

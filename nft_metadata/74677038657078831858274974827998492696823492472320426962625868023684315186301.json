@@ -1,0 +1,42 @@
+{
+  "name": "NS-622",
+  "image": "ar://Uh5RzQmT1AMsLbxiQLchKfnkZ16_6jPQO9efEb9BiYI",
+  "animation_url": "ar://U4IVArCbv3CDFcYkgSdBdHkOd4aWv0jqfSCkGfh8bIA",
+  "description": "North Star is located at the northernmost tip of the island in Wiami and is an upscale residential neighborhood. Known for its refined living and serene environment, it features elegant homes and high-end shops, offering a sophisticated lifestyle for its residents. This neighborhood combines exclusivity with convenience, providing a peaceful escape from the city while remaining connected to the vibrant culture of Wiami.",
+  "attributes": [
+    {
+      "trait_type": "Neighborhood",
+      "value": "North Star"
+    },
+    {
+      "trait_type": "Zoning Type",
+      "value": "Residential"
+    },
+    {
+      "trait_type": "Plot Size",
+      "value": "Nano"
+    },
+    {
+      "trait_type": "Building Size",
+      "value": "Lowrise"
+    },
+    {
+      "trait_type": "Distance To Ocean",
+      "value": "Medium"
+    },
+    {
+      "trait_type": "Distance To Bay",
+      "value": "Far"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Min # Of Floors",
+      "value": "7"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Max # Of Floors",
+      "value": "8"
+    }
+  ]
+}

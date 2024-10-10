@@ -1,0 +1,42 @@
+{
+  "name": "HH-89",
+  "image": "ar://XAXViNZFrT8IWI7GqEGJCChslV-bQl3mCqfqQUALA4U",
+  "animation_url": "ar://V2O4ZL5S15ophvjeALLOhKeqdxkVMhgRBCe8xWldUcU",
+  "description": "Heaven Heights is located between District Zero and Little Meow on the island of Wiami. It is a vibrant and multifaceted district that combines residential spaces with a variety of production and creative studios. This area is characterized by its blend of innovation and artistry, automotive dealerships, fashion studios and cutting-edge cybernetic production facilities. Heaven Heights is a hub for craftsmanship and technological advancement, supporting the development of advanced equipment and fostering a thriving community atmosphere.",
+  "attributes": [
+    {
+      "trait_type": "Neighborhood",
+      "value": "Haven Heights"
+    },
+    {
+      "trait_type": "Zoning Type",
+      "value": "Residential"
+    },
+    {
+      "trait_type": "Plot Size",
+      "value": "Nano"
+    },
+    {
+      "trait_type": "Building Size",
+      "value": "Lowrise"
+    },
+    {
+      "trait_type": "Distance To Ocean",
+      "value": "Far"
+    },
+    {
+      "trait_type": "Distance To Bay",
+      "value": "Medium"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Min # Of Floors",
+      "value": "3"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Max # Of Floors",
+      "value": "4"
+    }
+  ]
+}

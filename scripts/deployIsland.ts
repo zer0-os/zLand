@@ -19,29 +19,32 @@ async function main() {
   const provider = ethers.provider;
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
   const walletAddr = await wallet.getAddress();
+  
+  const testURI = "ar://cDQLqHx5Wta4YbJ7HgzeiZ3HJUrSxjFDofsCh12SGoE";
 
   console.log(`Deploying LandToken with the account: ${wallet.address}`);
 
   // Deploy the contract
   const contractURI = "";
-  const baseURI = ""
+  const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/"
+  //const baseURI = "ar://Uy0oRGIQ3RbmgDaOTLpnren3UQRCskuF6LB6bC2yaMs"
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
-  const landToken = await LandToken.deploy(walletAddr, 0, "LandToken", "LND", contractURI, baseURI, "1", root);
+  const landToken = await LandToken.deploy(walletAddr, 0, "Wiami: The Island", "ILND", contractURI, baseURI, "1", root);
 
   //await landToken.deployed();
   const landAddr = await landToken.getAddress();
   console.log(`LandToken deployed to: ${landAddr}`);
 
   // Issue a few tokens
-  const numberOfTokensToIssue = 4444; // Change this number to issue more or fewer tokens
+  const numberOfTokensToIssue = 1; // Change this number to issue more or fewer tokens
 
-  for (let i = 0; i <= numberOfTokensToIssue; i+=444) {
+  for (let i = 0; i < numberOfTokensToIssue; i+=1) {
     const entry = values[i];
     const proof = tree.getProof([entry.address, entry.id]);
     const tokenId = BigInt(entry.id);
 
     console.log(`Issuing token ${tokenId} to ${entry.address}`);
-    await landToken.connect(wallet).issue(proof, entry.address, tokenId, entry.uri);
+    await landToken.connect(wallet).claim(proof, entry.address, tokenId);
   }
 
   console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);

@@ -1,0 +1,42 @@
+{
+  "name": "DZ-310",
+  "image": "ar://ZEUT87NIPjZZ7kdsI1duiA2knDIoi5eWj3mmtH9T_HQ",
+  "animation_url": "ar://A6fxXTyTYv37B2d8T7nGTQ8tB7c82lv9VPmAiJ4bado",
+  "description": "District ZERO is located at the southernmost tip of the island of Wiami. It is a key industrial zone that specializes in transport, production and refining essential resources. This area is characterized by its warehouses and processing plants. Designed to support all production operations, playing a key role in the supply chain.",
+  "attributes": [
+    {
+      "trait_type": "Neighborhood",
+      "value": "District ZERO"
+    },
+    {
+      "trait_type": "Zoning Type",
+      "value": "Residential"
+    },
+    {
+      "trait_type": "Plot Size",
+      "value": "Nano"
+    },
+    {
+      "trait_type": "Building Size",
+      "value": "Lowrise"
+    },
+    {
+      "trait_type": "Distance To Ocean",
+      "value": "Far"
+    },
+    {
+      "trait_type": "Distance To Bay",
+      "value": "Far"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Min # Of Floors",
+      "value": "3"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Max # Of Floors",
+      "value": "4"
+    }
+  ]
+}

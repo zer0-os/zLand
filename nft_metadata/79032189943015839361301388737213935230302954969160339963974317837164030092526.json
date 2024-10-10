@@ -1,0 +1,42 @@
+{
+  "name": "SM-42",
+  "image": "ar://u__Sgpnj08H04BamtVwaUD6HJKjBT9u94wviRzOiD7M",
+  "animation_url": "ar://K7uzTTzyQUclAO7qmFdtw6m6jlLeOWKM43Al9irIP3g",
+  "description": "Space Mind is located in Wiami and is focused on the fusion of advanced technology and spirituality. It serves as a hub for consciousness expansion, with residents exploring neural interfaces, consciousness mapping, and space-time manipulation. This district is characterized by its serene atmosphere and enigmatic energy, attracting those who seek to explore the mysteries of the cosmos. Known for its research into mind-machine integration and cosmic awareness, Space Mind offers a peaceful yet mysterious environment, making it a center for both technological innovation and spiritual growth.",
+  "attributes": [
+    {
+      "trait_type": "Neighborhood",
+      "value": "Space Mind"
+    },
+    {
+      "trait_type": "Zoning Type",
+      "value": "Residential"
+    },
+    {
+      "trait_type": "Plot Size",
+      "value": "Micro"
+    },
+    {
+      "trait_type": "Building Size",
+      "value": "Lowrise"
+    },
+    {
+      "trait_type": "Distance To Ocean",
+      "value": "Far"
+    },
+    {
+      "trait_type": "Distance To Bay",
+      "value": "Far"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Min # Of Floors",
+      "value": "3"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Max # Of Floors",
+      "value": "4"
+    }
+  ]
+}

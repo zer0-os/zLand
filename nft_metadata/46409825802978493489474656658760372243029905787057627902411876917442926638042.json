@@ -1,0 +1,42 @@
+{
+  "name": "LM-78",
+  "image": "ar://uOqNmJ0C5TwgrUZIO_m-PzYoz3asImnNJ4NpdVxzrXY",
+  "animation_url": "ar://o6v_x1dqmuZ4zp6749pEem2BfjGNfBrEkbsEnlVUVy4",
+  "description": "Little Meow is located in Wiami and is known for its grassroots movements and community-focused spirit. It serves as a recruitment and training ground for the Wilders, who resist the control of The Forum. This district is characterized by its futuristic stores specializing in training centers for combat and martial arts and racing garages. Little Meow is a hub for entertainment and tourism, featuring theaters, cafes, martial arts schools, and racing clubs, all contributing to its dynamic and rebellious atmosphere.",
+  "attributes": [
+    {
+      "trait_type": "Neighborhood",
+      "value": "Little Meow"
+    },
+    {
+      "trait_type": "Zoning Type",
+      "value": "Residential"
+    },
+    {
+      "trait_type": "Plot Size",
+      "value": "Nano"
+    },
+    {
+      "trait_type": "Building Size",
+      "value": "Lowrise"
+    },
+    {
+      "trait_type": "Distance To Ocean",
+      "value": "Far"
+    },
+    {
+      "trait_type": "Distance To Bay",
+      "value": "Far"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Min # Of Floors",
+      "value": "5"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Max # Of Floors",
+      "value": "6"
+    }
+  ]
+}
