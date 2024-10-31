@@ -7,6 +7,8 @@ import { ILandToken } from "./ILandToken.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import { ERC721VotesC, ERC721, EIP712 } from "./ERC721VotesC.sol";
+import "../../lib/creator-token-contracts/contracts/interfaces/ICreatorTokenTransferValidator.sol";
+
 
 /**
  * @title LandToken
@@ -75,8 +77,6 @@ contract LandToken is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
         root = root_;
         baseURI = baseURI_;
         contractURI = contractURI_;
-
-        //setToDefaultSecurityPolicy();
     }
 
     /**

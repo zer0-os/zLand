@@ -47,7 +47,7 @@ async function main() {
 
     // Update the image URL based on the neighborhood prefix
     if (arweaveLinks[neighborhoodPrefix]) {
-      metadata.image = `ar://${arweaveLinks[neighborhoodPrefix]}`;
+      metadata.image = `https://arweave/net${arweaveLinks[neighborhoodPrefix]}`;
     } else {
       console.warn(`No Arweave link found for neighborhood prefix: ${neighborhoodPrefix}`);
     }

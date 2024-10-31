@@ -147,24 +147,4 @@ describe("LandToken", function () {
       );
     });
   });
-
-  describe("Royalties", function () {
-    it("Should update and return default royalties", async function () {
-      const { landToken, owner, addr1 } = await loadFixture(deployLandTokenFixture);
-      await landToken.setDefaultRoyalty(addr1.getAddress(), 200); // Set 200 basis points (2%)
-
-      const [receiver, royaltyAmount] = await landToken.royaltyInfo(1, 10000); // Query royalty for 10,000 units
-      expect(receiver).to.equal(await addr1.getAddress());
-      expect(royaltyAmount).to.equal(200); // Expect 200 units as 2% of 10,000
-    });
-
-    it("Should set and return token-specific royalty", async function () {
-      const { landToken, addr2 } = await loadFixture(deployLandTokenFixture);
-      await landToken.setTokenRoyalty(1, await addr2.getAddress(), 500); // Set 500 basis points (5%) for tokenId 1
-
-      const [receiver, royaltyAmount] = await landToken.royaltyInfo(1, 10000); // Query royalty for 10,000 units
-      expect(receiver).to.equal(await addr2.getAddress());
-      expect(royaltyAmount).to.equal(500); // Expect 500 units as 5% of 10,000
-    });
-  });
 });

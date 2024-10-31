@@ -1,9 +1,9 @@
 {
-    "name": "Wilder World: The Island",
-    "description": "Island Test",
-    "image": "https://external-link-url.com/image.png",
-    "banner_image": "https://external-link-url.com/banner-image.png",
-    "featured_image": "https://external-link-url.com/featured-image.png",
-    "external_link": "https://external-link-url.com",
-    "collaborators": ["0x0000000000000000000000000000000000000000"]
+    "name": "Wilder Land: The Island",
+    "description": "The Island is the first fully explorable area in Wilder World, featuring a vast digital metropolis spread across 8 distinct neighborhoods that offer diverse gameplay, exploration, art and nature. Zoning on the Island is divided into residential, commercial, industrial and mixed-use areas, allowing Wilders to develop properties for experiences, living, commerce and crafting within the evolving open world of Wiami.",
+    "image": "ar://TCTGcRa1YHSq3giZRErgmF-A7i-fsshW_xVOTnZ3Ddc",
+    "banner_image": "ar://1vsoC0VUoWBCRRNCVIefD3a8uDd7fjDBoEmAlEvqqgI",
+    "featured_image": "ar://oxD-DDKopcN6ABMTzQSiQJukXZrix9eEksU5ZSNh8bU",
+    "external_link": "https://wilderworld.com",
+    "collaborators": ["0x21743Ae9BbbA29ac5Ae4c06fD3f3497Dec86D3F9"]
 }

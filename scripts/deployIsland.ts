@@ -25,18 +25,19 @@ async function main() {
   console.log(`Deploying LandToken with the account: ${wallet.address}`);
 
   // Deploy the contract
-  const contractURI = "";
-  const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/"
+  const contractURI = "ar://33rFVRyBCrCRBfpRk3f-S-wSEZgHez8IfgTw4DPBzXw";
+  const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/";
   //const baseURI = "ar://Uy0oRGIQ3RbmgDaOTLpnren3UQRCskuF6LB6bC2yaMs"
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
-  const landToken = await LandToken.deploy(walletAddr, 0, "Wiami: The Island", "ILND", contractURI, baseURI, "1", root);
-
+  const landToken = await LandToken.deploy(walletAddr, 500, "Wilder Land: The Island", "WIA", contractURI, baseURI, "1", root);
+  await landToken.waitForDeployment();
+  await landToken.setToDefaultSecurityPolicy();
   //await landToken.deployed();
   const landAddr = await landToken.getAddress();
   console.log(`LandToken deployed to: ${landAddr}`);
 
   // Issue a few tokens
-  const numberOfTokensToIssue = 1; // Change this number to issue more or fewer tokens
+  const numberOfTokensToIssue = 2; // Change this number to issue more or fewer tokens
 
   for (let i = 0; i < numberOfTokensToIssue; i+=1) {
     const entry = values[i];

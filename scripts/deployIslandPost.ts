@@ -25,9 +25,9 @@ async function main() {
   const LandToken = await ethers.getContractAt("ILandToken", contractAddress, wallet);
   
   // Example: Set the contract URI
-  //const newContractURI = "ar://v0kY7-7qWxPSU2SMga-WV2gN07pU9lRLZFjUwacNlRM";
-  //await LandToken.setContractURI(newContractURI);
-  //console.log(`Contract URI updated to: ${newContractURI}`);
+  const newContractURI = "ar://AbWG58cITnikvr1yJn1iWo5Um0QKPhNbjqrumHam7jQ";
+  await LandToken.setContractURI(newContractURI);
+  console.log(`Contract URI updated to: ${newContractURI}`);
   /*
   // Example: Set the base URI
   const newBaseURI = "https://new-base-uri.example.com/";
@@ -58,7 +58,7 @@ async function main() {
   //const testURI = "ar://LuCKuEYHW0rRu5etqAXbWsWAaXlQIiF_5QjZYBxOD0g";
   const testURI = "ar://cDQLqHx5Wta4YbJ7HgzeiZ3HJUrSxjFDofsCh12SGoE";
   
-  // Issue tokens in a loop
+  /* Issue tokens in a loop
   const numberOfTokensToIssue = 4444; // Adjust this value as needed
   for (let i = 2207; i < numberOfTokensToIssue; i += 1) {
     const entry = values[i];
@@ -70,7 +70,7 @@ async function main() {
     const tx = await LandToken.claim(proof, entry.address, tokenId);
     //await tx.wait();
     console.log("claimed ", i);
-  }
+  }*/
   
   //console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
 }
