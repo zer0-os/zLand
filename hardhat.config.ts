@@ -13,6 +13,12 @@ const config: HardhatUserConfig = {
         runs: 200        // Adjust the number of optimization runs (200 is a common default)
       }
     }
+  },  
+  etherscan: {
+    apiKey: {
+      mainnet: process.env.ETHERSCAN_API_KEY || '',
+      sepolia: process.env.ETHERSCAN_API_KEY || ''
+    }
   },
   networks: {
     localhost: {

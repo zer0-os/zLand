@@ -39,6 +39,7 @@ async function main() {
     root
   );
   await landToken.waitForDeployment();
+  //await landToken.setToDefaultSecurityPolicy();
 
   const landAddr = await landToken.getAddress();
   console.log(`LandToken deployed to: ${landAddr}`);

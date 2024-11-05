@@ -66,21 +66,21 @@ describe("LandToken and ZDAO Integration", function () {
     const nftAddr = await landToken.getAddress(); // Use the deployed LandToken as the NFT for governance
 
     // Deploy the TimelockController contract
-    const TimelockController = await ethers.getContractFactory("TimelockController");
+    const TimelockController = await ethers.getContractAt("TimelockController", "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b");
     const minDelay = 1; // Min delay in seconds
     const proposers: string[] = [];
     const executors: string[] = [];
     const admin = ownerAddr;
 
-    const timelock = await TimelockController.deploy(
+    /*const timelock = await TimelockController.deploy(
       minDelay,
       proposers,
       executors,
       admin
-    );
+    );*/
     //await timelock.deployed();
 
-    const timelockAddr = await timelock.getAddress();
+    //const timelockAddr = await timelock.getAddress();
 
     // Deploy the ZDAO contract
     const zDAOFactory = await ethers.getContractFactory("ZDAO");

@@ -16,7 +16,7 @@ contract ZDAOFactory {
     /// @param zdaoAddress The address of the newly deployed ZDAO contract.
     event ZDAOCreated(address indexed zdaoAddress);
 
-    address[] zDAOs;
+    address[] public zDAOs;
 
     /**
      * @notice Creates a new ZDAO instance with an existing TimelockController.

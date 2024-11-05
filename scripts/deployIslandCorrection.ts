@@ -7,10 +7,10 @@ dotenv.config();
 
 async function main() {
   // Contract address where LandToken was deployed
-  const contractAddress = "0xAd5db740300fE67716b3e3db65752866E92C3a54";
+  const contractAddress = "0xd396ca541F501f5D303166C509e2045848df356b";
 
   // Load values from the JSON file
-  const values = JSON.parse(fs.readFileSync("output.json", "utf8"));
+  const values = JSON.parse(fs.readFileSync("dropData.json", "utf8"));
   
   // Transform values into the format required for the Merkle tree
   const treeValues = values.map((value: { address: string; id: string }) => [value.address, value.id]);
@@ -93,7 +93,7 @@ async function main() {
   
 
   
-  //console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
+  console.log(`Issued ${numberOfTokensToIssue} tokens successfully.`);
 }
 
 main().catch((error) => {
