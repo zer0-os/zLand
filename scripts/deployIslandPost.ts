@@ -9,7 +9,8 @@ async function main() {
   // Contract address where LandToken was deployed
   //const contractAddress = "0xAd5db740300fE67716b3e3db65752866E92C3a54";
   const contractAddress = "0xd396ca541F501f5D303166C509e2045848df356b";
-
+  //const contractAddress = "0xd332C3EDf3502c36c302d81BD755aD6Bd11BA981";
+  
   // Load values from the JSON file
   const values = JSON.parse(fs.readFileSync("dropData.json", "utf8"));
   
@@ -26,19 +27,20 @@ async function main() {
   const LandToken = await ethers.getContractAt("LandToken", contractAddress, wallet);
   
   // Example: Set the contract URI
-  //const newContractURI = "ar://AbWG58cITnikvr1yJn1iWo5Um0QKPhNbjqrumHam7jQ";
+  //const newContractURI = "ar://GaCwRTkQoquL15KxkpzdzBSTzUfrykoRJtyU-YV66S4/";
   //await LandToken.setContractURI(newContractURI);
   //console.log(`Contract URI updated to: ${newContractURI}`);
-  /*
+  //
   // Example: Set the base URI
-  const newBaseURI = "https://new-base-uri.example.com/";
+  const newBaseURI = "ar://C-ukHiVDE_twDYirdiEZOH-Bjd4JdzjYbPn0Q84_SOA/";
   await LandToken.setBaseURI(newBaseURI);
+  //console.log(await LandToken.baseURI());
   console.log(`Base URI updated to: ${newBaseURI}`);
-  */
+  
   // Example: Set default royalty
   //const royaltyReceiver = wallet.address;
   //const royaltyFeeNumerator = 500; // 5%
-  await LandToken.setDefaultRoyalty("0x2105694E890678D3eB9340CfFB5eD43b0fA6474b", 500);
+  //await LandToken.setDefaultRoyalty("0x2105694E890678D3eB9340CfFB5eD43b0fA6474b", 500);
   //console.log(`Default royalty set to ${royaltyFeeNumerator / 100}% for receiver: ${royaltyReceiver}`);
   
   //Example: set custom security policy

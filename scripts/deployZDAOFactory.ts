@@ -25,18 +25,18 @@ async function main() {
 
   //const zdaoAddress = await ZDAOFactory.zDAOs(0);
   //console.log(zdaoAddress);
-
+  //0xcC0cbAc4828D0402d7fD6dEE953E055052755a3E
   // Example parameters for creating a new ZDAO instance
-  const governorName = "WIAMI DAO";
+  const governorName = "Wilder Land: The Island DAO";
   const tokenAddress = "0xd396ca541F501f5D303166C509e2045848df356b"; // replace with actual token address
-  const timelockAddress = "0x1843A2c71Ee6bdd18f3F00e95e44A0c61d64A4A4"; // replace with actual timelock address
+  const timelockAddress = "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b"; // replace with actual timelock address
   const votingDelay = 50; // in blocks
   const votingPeriod = 60000; // in blocks, example for ~1 day on Ethereum
-  const proposalThreshold = ethers.parseEther("100"); // minimum tokens to propose
+  const proposalThreshold = 1; // minimum tokens to propose
   const quorumPercentage = 5; // 5% quorum
   const voteExtension = 6000; // example extension period
 
-  // Call createZDAO to deploy a new ZDAO instance through the factory
+  /* Call createZDAO to deploy a new ZDAO instance through the factory
   const tx = await ZDAOFactory.createZDAO(
     governorName,
     tokenAddress,
@@ -46,19 +46,19 @@ async function main() {
     proposalThreshold,
     quorumPercentage,
     voteExtension
-  );
+  );*/
 
   // Wait for transaction to complete
-  const receipt = await tx.wait();
-  console.log(receipt);
+  //const receipt = await tx.wait();
+  //console.log(receipt);
   
-  const zdaoAddress = await ZDAOFactory.zDAOs(0);
-  const zdao = await ethers.getContractAt("ZDAO","0x289AABeAF429C918d4eEe42676F29D9aA467259B");
+  const zdaoAddress = await ZDAOFactory.zDAOs(1);
+  //const zdao = await ethers.getContractAt("ZDAO",zdaoAddress);
 
   console.log(zdaoAddress);
   // Wait for Etherscan to index the new ZDAO contract
   console.log("Waiting for Etherscan to index the ZDAO contract...");
-  await new Promise((resolve) => setTimeout(resolve, 60000)); // Wait for 60 seconds
+  //await new Promise((resolve) => setTimeout(resolve, 60000)); // Wait for 60 seconds
 
   // Verify the ZDAO contract on Etherscan
   await run("verify:verify", {
@@ -73,6 +73,7 @@ async function main() {
       quorumPercentage,
       voteExtension,
     ],
+    force: true,
     contract: "contracts/dao/ZDAO.sol:ZDAO", // Update the path and contract name as necessary
   });
 

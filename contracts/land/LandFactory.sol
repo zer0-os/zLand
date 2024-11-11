@@ -39,6 +39,7 @@ contract LandFactory {
         );
 
         tokens.push(address(landToken));
+        landToken.transferOwnership(royaltyReceiver_);
 
         emit LandTokenCreated(address(landToken));
 

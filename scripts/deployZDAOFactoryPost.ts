@@ -1,42 +1,88 @@
 // deploy.ts
 
-import { ethers } from "hardhat";
-import { ZDAOFactory } from "../typechain-types";
+import { ethers, run } from "hardhat";
 
 async function main() {
-    // Get the ZDAOFactory contract factory
-    const ZDAOFactory = await ethers.getContractAt("ZDAOFactory", "0x2722769C201B669342d909F0E95E17441EdFDBF0");
+  //Get the ZDAOFactory contract factory
+  /*const ZDAOFactory = await ethers.getContractFactory("ZDAOFactory");
 
-    // Example parameters for creating a new ZDAO instance
-    const governorName = "WIAMI DAO";
-    const tokenAddress = "0x9534D5C9f0539933367419826b81C5Ee14AD16b6"; // replace with actual token address
-    const timelockAddress = "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b"; // replace with actual timelock address
-    const votingDelay = 100; // in blocks
-    const votingPeriod = 60000; // in blocks, example for ~1 day on Ethereum
-    const proposalThreshold = 1; // minimum tokens to propose
-    const quorumPercentage = 5; // 5% quorum
-    const voteExtension = 6000; // example extension period
+  // Deploy the ZDAOFactory contract
+  const zdaoFactory = await ZDAOFactory.deploy();
+  const zdaoFacAddr = await zdaoFactory.getAddress();
+  console.log(`ZDAOFactory deployed to: ${zdaoFacAddr}`);
 
-    // Call createZDAO to deploy a new ZDAO instance through the factory
-    const tx = await ZDAOFactory.createZDAO(
-        governorName,
-        tokenAddress,
-        timelockAddress,
-        votingDelay,
-        votingPeriod,
-        proposalThreshold,
-        quorumPercentage,
-        voteExtension
-    );
+  // Wait for the deployment transaction to be mined and a few confirmations
+  await zdaoFactory.deploymentTransaction()?.wait(5); // Wait for 5 confirmations
 
-    // Wait for transaction to complete
-    const receipt = await tx.wait();
+  // Verify the ZDAOFactory contract on Etherscan
+  await run("verify:verify", {
+    address: await zdaoFactory.getAddress(),
+    constructorArguments: [],
+  });
+*/
+
+  const ZDAOFactory = await ethers.getContractAt("ZDAOFactory","0xeA86bCf76A0Ca2038B552E1974716986fc7722c6");
+
+  //const zdaoAddress = await ZDAOFactory.zDAOs(0);
+  //console.log(zdaoAddress);
+  //0xcC0cbAc4828D0402d7fD6dEE953E055052755a3E
+  // Example parameters for creating a new ZDAO instance
+  const governorName = "Wilder Land: The Island DAO";
+  const tokenAddress = "0xd396ca541F501f5D303166C509e2045848df356b"; // replace with actual token address
+  const timelockAddress = "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b"; // replace with actual timelock address
+  const votingDelay = 50; // in blocks
+  const votingPeriod = 60000; // in blocks, example for ~1 day on Ethereum
+  const proposalThreshold = 1; // minimum tokens to propose
+  const quorumPercentage = 5; // 5% quorum
+  const voteExtension = 6000; // example extension period
+
+  // Call createZDAO to deploy a new ZDAO instance through the factory
+  const tx = await ZDAOFactory.createZDAO(
+    governorName,
+    tokenAddress,
+    timelockAddress,
+    votingDelay,
+    votingPeriod,
+    proposalThreshold,
+    quorumPercentage,
+    voteExtension
+  );
+
+  // Wait for transaction to complete
+  const receipt = await tx.wait();
+  console.log(receipt);
+  
+  const zdaoAddress = await ZDAOFactory.zDAOs(1);
+  //const zdao = await ethers.getContractAt("ZDAO",zdaoAddress);
+
+  console.log(zdaoAddress);
+  // Wait for Etherscan to index the new ZDAO contract
+  console.log("Waiting for Etherscan to index the ZDAO contract...");
+  await new Promise((resolve) => setTimeout(resolve, 60000)); // Wait for 60 seconds
+
+  // Verify the ZDAO contract on Etherscan
+  await run("verify:verify", {
+    address: zdaoAddress,
+    constructorArguments: [
+      governorName,
+      tokenAddress,
+      timelockAddress,
+      votingDelay,
+      votingPeriod,
+      proposalThreshold,
+      quorumPercentage,
+      voteExtension,
+    ],
+    contract: "contracts/dao/ZDAO.sol:ZDAO", // Update the path and contract name as necessary
+  });
+
+  console.log("ZDAO verified on Etherscan.");
 }
 
 // Execute the script
 main()
-    .then(() => process.exit(0))
-    .catch(error => {
-        console.error(error);
-        process.exit(1);
-    });
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error("Error in deployment script:", error);
+    process.exit(1);
+  });

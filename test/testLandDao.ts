@@ -1,4 +1,4 @@
-import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre from "hardhat";
 import { ethers } from "hardhat";
@@ -12,6 +12,9 @@ async function mineBlocks(numberOfBlocks: number) {
   }
 }
 
+const provider = ethers.provider;
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+console.log(wallet);
 interface Entry {
   address: string;
   id: string;
@@ -36,8 +39,8 @@ describe("LandToken and ZDAO Integration", function () {
     //await landFactory.deployed();
 
     // Create LandToken via the factory
-    const contractURI = "ar://zApSefQk3L8xFO1_WVVuFsgAMKbYfjv_YZD87q9EcO0/landData/contract";
-    const baseURI = "ar://3lALF2kZjTA2IEgItM2wwhln0_UBr3n-uUMQU89ZzO8/";
+    const contractURI = "";
+    const baseURI = "";
 
     const tx = await landFactory.createLandToken(
       ownerAddr,
@@ -56,38 +59,37 @@ describe("LandToken and ZDAO Integration", function () {
     console.log("lta ", landTokenAddress);
     const landToken = await ethers.getContractAt("LandToken", landTokenAddress);
     
-    return { landToken, owner, addr1, addr2, tree, values, landFactory };
+    return { landToken, owner, ownerAddr, addr1, addr2, tree, values, landFactory };
   }
 
   async function deployZDAOFixture() {
-    const { landToken, owner, addr1, addr2, tree, values } = await loadFixture(deployLandTokenFixture);
+    const { landToken, owner, ownerAddr, addr1, addr2, tree, values } = await loadFixture(deployLandTokenFixture);
 
-    const ownerAddr = await owner.getAddress();
     const nftAddr = await landToken.getAddress(); // Use the deployed LandToken as the NFT for governance
 
     // Deploy the TimelockController contract
-    const TimelockController = await ethers.getContractAt("TimelockController", "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b");
+    const TimelockController = await ethers.getContractFactory("TimelockController");
     const minDelay = 1; // Min delay in seconds
     const proposers: string[] = [];
     const executors: string[] = [];
     const admin = ownerAddr;
 
-    /*const timelock = await TimelockController.deploy(
+    const timelock = await TimelockController.deploy(
       minDelay,
       proposers,
       executors,
       admin
-    );*/
+    );
     //await timelock.deployed();
 
-    //const timelockAddr = await timelock.getAddress();
+    const timelockAddr = await timelock.getAddress();
 
     // Deploy the ZDAO contract
     const zDAOFactory = await ethers.getContractFactory("ZDAO");
     const delay = 1;
     const votingPeriod = 5;
-    const proposalThreshold = 0;
-    const quorum = 0;
+    const proposalThreshold = 1;
+    const quorum = 1;
     const voteExtension = 2;
 
     const zDAO = await zDAOFactory.deploy(
@@ -100,9 +102,13 @@ describe("LandToken and ZDAO Integration", function () {
       quorum,
       voteExtension
     );
-    //await zDAO.deployed();
-
-    return { zDAO, landToken, timelock, owner, addr1, addr2, nftAddr, timelockAddr, tree, values };
+    
+    const zDAOaddr = await zDAO.getAddress();
+    const prole = await timelock.PROPOSER_ROLE();
+    const erole = await timelock.EXECUTOR_ROLE();
+    await timelock.grantRole(prole, zDAOaddr)
+    await timelock.grantRole(erole, ethers.ZeroAddress);
+    return { zDAO, zDAOaddr, landToken, timelock, owner, addr1, addr2, nftAddr, timelockAddr, tree, values };
   }
  
   describe("LandToken Factory and DAO Integration", function () {
@@ -119,27 +125,52 @@ describe("LandToken and ZDAO Integration", function () {
       expect(actualOwner.toLowerCase()).to.equal(entry.address.toLowerCase());
     });
 
-    it("Should deploy the DAO and allow proposal submission using LandToken", async function () {
-      const { zDAO, landToken, owner, addr1, tree, values } = await loadFixture(deployZDAOFixture);
-
+    it("Should deploy the DAO and allow proposal submission and execution using LandToken", async function () {
+      const { zDAO, zDAOaddr, landToken, timelockAddr, owner, addr1, tree, values } = await loadFixture(deployZDAOFixture);
+    
       // Mint an additional LandToken to addr1 (for governance purposes)
       const entry = values[0];
       const proof = tree.getProof([entry.address, entry.id]);
       const tokenId = parseInt(entry.id);
+    
+      const claimtx = await landToken.claim(proof, entry.address, tokenId);
+      await claimtx.wait();
+      console.log(await landToken.ownerOf(tokenId));
 
-      await landToken.claim(proof, entry.address, tokenId);
-      // await landToken.connect(addr1).delegate(addr1);
-      // Propose an ownership transfer
-      const landTokenAddress = await landToken.getAddress()
+      console.log("land owner: ", await landToken.owner());
+      console.log("owner: ", await owner.getAddress());
+      console.log("addr1: ", await addr1.getAddress());
+
+      await landToken.transferOwnership(timelockAddr);
+      const walletAddr = await wallet.getAddress();
+
+      const landTokenAddress = await landToken.getAddress();
       const targets = [landTokenAddress];
       const calldatas = [
-        landToken.interface.encodeFunctionData("transferOwnership", [await addr1.getAddress()]),
+        landToken.interface.encodeFunctionData("transferFrom", [timelockAddr, walletAddr, tokenId]),
       ];
-      const description = "Transfer ownership";
-
+      const description = "Transfer NFT";
+    
+      // Send some ETH to wallet for gas
+      await addr1.sendTransaction({
+        to: wallet.address,
+        value: ethers.parseEther("1.0"),
+      });
+    
+      // Delegate votes
+      const tx1 = await landToken.connect(wallet).delegate(await wallet.getAddress());
+      await tx1.wait();
+    
+      const blockNumber = await hre.ethers.provider.getBlockNumber();
+      console.log(`Latest block number: ${blockNumber}`);
+    
+      const votes = await landToken.connect(wallet).getVotes(wallet.address);
+      console.log(`Voting power of ${wallet.address} at block ${blockNumber}: ${votes.toString()}`);
+      
+  
       // Propose the transaction
-      await zDAO.propose(targets, [0], calldatas, description);
-
+      await zDAO.connect(wallet).propose(targets, [0], calldatas, description);
+    
       // Get proposal ID
       const proposalId = await zDAO.hashProposal(
         targets,
@@ -147,16 +178,34 @@ describe("LandToken and ZDAO Integration", function () {
         calldatas,
         ethers.keccak256(new TextEncoder().encode(description))
       );
-
+      
       // Mine blocks to move the proposal to Active
       await mineBlocks(2);
-
+    
       // Vote on the proposal and execute it
-      await zDAO.castVote(proposalId, 1); // Voting in favor
-      await mineBlocks(10); // Move past the voting period
-
+      const vote = await zDAO.connect(wallet).castVote(proposalId, 1); // Voting in favor
+      await vote.wait();
+      await mineBlocks(5); // Move past the voting period
+      
       const finalState = await zDAO.state(proposalId);
-      expect(finalState).to.equal(3); // Proposal should be succeeded
+      expect(finalState).to.equal(4); // Proposal should be succeeded
+      
+      await landToken.connect(wallet).transferFrom(walletAddr, timelockAddr, tokenId);
+      
+      // Queue and execute the proposal
+      const queueTx = await zDAO.connect(wallet).queue(targets, [0], calldatas, ethers.keccak256(new TextEncoder().encode(description)));
+      await queueTx.wait();
+    
+      await mineBlocks(1); // Wait for the timelock delay if any
+    
+      const executeTx = await zDAO.connect(wallet).execute(targets, [0], calldatas, ethers.keccak256(new TextEncoder().encode(description)));
+      await executeTx.wait();
+    
+      // Verify ownership transfer
+      //const newOwner = await landToken.owner();
+      //expect(newOwner).to.equal(await addr1.getAddress());
+      const nftOwner = await landToken.ownerOf(tokenId);
+      expect(nftOwner).to.equal(walletAddr);
     });
   });
 });

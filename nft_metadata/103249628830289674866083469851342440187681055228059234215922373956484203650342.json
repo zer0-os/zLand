@@ -2,11 +2,11 @@
   "name": "NX-23",
   "image": "ar://ei2l3N4Ed2JgAzFOPZ8ovao4HYEYCHvpmosOsIdR9JA",
   "animation_url": "ar://yXj6iB6_hUMy6-h-45MQ4-O4aNfvWPSD4bufxrFQFL0",
-  "description": "Nexus is the technological and crypto-financial hub of Wiami, known for its skyscrapers and cutting-edge innovations in blockchain, AI, and digital infrastructure. It houses data centers, research labs, and tech startups that fuel the city’s decentralized economy. This district serves as the control center for Wiami’s security and governance, managing network monitoring and infrastructure, making it a key player in shaping the city’s digital future.",
+  "description": "NEXUS is the technological and crypto-financial hub of Wiami, known for its skyscrapers and cutting-edge innovations in blockchain, AI, and digital infrastructure. It houses data centers, research labs, and tech startups that fuel the city’s decentralized economy. This district serves as the control center for Wiami’s security and governance, managing network monitoring and infrastructure, making it a key player in shaping the city’s digital future.",
   "attributes": [
     {
       "trait_type": "Neighborhood",
-      "value": "Nexus"
+      "value": "NEXUS"
     },
     {
       "trait_type": "Zoning Type",

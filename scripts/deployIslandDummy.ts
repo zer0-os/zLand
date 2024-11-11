@@ -26,7 +26,7 @@ async function main() {
   //const contractURI = "ar://33rFVRyBCrCRBfpRk3f-S-wSEZgHez8IfgTw4DPBzXw";
   //const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/";
   const contractURI = "";
-  const baseURI = "";
+  const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/";
   const daoAddress = "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b";
 
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
