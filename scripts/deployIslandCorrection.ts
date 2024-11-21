@@ -7,8 +7,8 @@ dotenv.config();
 
 async function main() {
   // Contract address where LandToken was deployed
-  const contractAddress = "0xd396ca541F501f5D303166C509e2045848df356b";
-
+  //const contractAddress = "0xd396ca541F501f5D303166C509e2045848df356b";
+  const contractAddress = "0x4e86f358d3Ab0AB5734D4f90Ae4c1fBa57d4E4b0";
   // Load values from the JSON file
   const values = JSON.parse(fs.readFileSync("dropData.json", "utf8"));
   
@@ -17,7 +17,7 @@ async function main() {
 
   // Get the deployer's wallet using the PRIVATE_KEY from the environment
   const provider = ethers.provider;
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+  const wallet = new ethers.Wallet(process.env.Z_KEY!, provider);
 
   console.log(`Using the account: ${wallet.address}`);
 
@@ -56,16 +56,30 @@ async function main() {
   const root = tree.root;
 
   //const testURI = "ar://LuCKuEYHW0rRu5etqAXbWsWAaXlQIiF_5QjZYBxOD0g";
-  const testURI = "ar://cDQLqHx5Wta4YbJ7HgzeiZ3HJUrSxjFDofsCh12SGoE";
+  //const testURI = "ar://cDQLqHx5Wta4YbJ7HgzeiZ3HJUrSxjFDofsCh12SGoE";
   
   const numberOfTokensToIssue = 4444; // Adjust this value as needed
-
-  for (let i = 0; i < numberOfTokensToIssue; i += 1) {
+  let currentBlockNumber = 1;
+  let targetBlockNumber = 0
+  for (let i = 90; i < numberOfTokensToIssue; i += 1) {
+    
+      currentBlockNumber = await provider.getBlockNumber();
+      console.log(currentBlockNumber);
+      if(currentBlockNumber < targetBlockNumber){
+        i--;
+        continue;
+      }
       const entry = values[i];
       const proof = tree.getProof([entry.address, entry.id]);
       const tokenId = BigInt(entry.id);
-  
-      console.log(`Checking token ID ${tokenId}`);
+
+      const tx = await LandToken.claim(proof, entry.address, tokenId);
+      // Uncomment if you want to wait for the transaction to be mined
+      await tx.wait();
+      console.log(tx);
+      targetBlockNumber = currentBlockNumber + 3;
+
+      /*console.log(`Checking token ID ${tokenId}`);
   
       let tokenExists = true;
   
@@ -77,18 +91,19 @@ async function main() {
           // If ownerOf throws, the token doesn't exist, so we attempt to issue it
           console.log(`Token ${tokenId} does not exist. Attempting to issue token to ${entry.address}.`);
           tokenExists = false;
-      }
+      }*/
   
-      if (!tokenExists) {
+      /*if (true) {
           try {
               const tx = await LandToken.claim(proof, entry.address, tokenId);
               // Uncomment if you want to wait for the transaction to be mined
-              // await tx.wait();
+              await tx.wait();
+              console.log(tx);
               console.log(`Successfully claimed token ${tokenId} for ${entry.address}`);
           } catch (error) {
               console.error(`Failed to claim token ${tokenId} for ${entry.address}:`, error);
           }
-      }
+      }*/
   }
   
 

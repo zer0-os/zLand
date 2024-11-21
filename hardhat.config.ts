@@ -31,6 +31,10 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: process.env.SEPOLIA_RPC_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    wilderDev: {
+      url: "https://wilderworld-dev-erigon1-rpc.eu-north-2.gateway.fm/",
+      accounts: process.env.Z_KEY !== undefined ? [process.env.Z_KEY] : [],
     }
   }
 };

@@ -5,6 +5,8 @@ import { ZDAOFactory } from "../typechain-types";
 
 async function main() {
     //previously deployed to 0x2105694E890678D3eB9340CfFB5eD43b0fA6474b mainnet
+    //0xc01D72ac53dC1d3CEE4A47a02dC99A5D65932B04 zchain
+    
     // Get the ZDAOFactory contract factory    
     const timelock = await ethers.getContractAt("TimelockController", "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b");
     //const timelockFac = await ethers.getContractFactory("TimelockController");
@@ -15,10 +17,10 @@ async function main() {
     //const admin = ownerAddr;
     // Deploy the TimelockController contract
     //const timelock = await timelockFac.deploy(
-    //    minDelay,
-    //    proposers,
-    //    executors,
-    //    "0x721600d52B82111A8F10F307192c78b675a3A356"
+      //  minDelay,
+        //proposers,
+        //executors,
+        //"0x26E3E3dddd34196bB5d6F0D782c423EbDb7094a3"
     //);
 
     // Grant roles in the TimelockController
@@ -29,11 +31,14 @@ async function main() {
     // Grant the proposer role to the Governor contract and the owner
     //await timelock.revokeRole(proposerRole, "0x289AABeAF429C918d4eEe42676F29D9aA467259B");
     //await timelock.revokeRole(proposerRole, "0x721600d52B82111A8F10F307192c78b675a3A356");
-    const tx = await timelock.grantRole(proposerRole, "0x7B821BE72DE68A83BE280641620B8E9D36379C71");
-    await tx.wait();
+    
+    //const tx = await timelock.grantRole(proposerRole, "0x7B821BE72DE68A83BE280641620B8E9D36379C71");
+    //const tx = await timelock.grantRole(proposerRole, "");
+    
+    //await tx.wait();
     // Grant the executor role to the zero address (open executor)
-    //await timelock.grantRole(executorRole, ethers.ZeroAddress); // Adjusted syntax for ethers.js v6
-
+    const grole = await timelock.grantRole(executorRole, ethers.ZeroAddress); // Adjusted syntax for ethers.js v6
+    await grole.wait();
     console.log(`Timelock deployed: ${await timelock.getAddress()}`);
 }
 

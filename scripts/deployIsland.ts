@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
+  //zchain land 0x4e86f358d3Ab0AB5734D4f90Ae4c1fBa57d4E4b0
+  
   // Load values from the JSON file
   const values = JSON.parse(fs.readFileSync("dropData.json", "utf8"));
   
@@ -17,7 +19,7 @@ async function main() {
 
   // Get the deployer's wallet using the PRIVATE_KEY from the environment
   const provider = ethers.provider;
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+  const wallet = new ethers.Wallet(process.env.Z_KEY!, provider);
   const walletAddr = await wallet.getAddress();
   
   console.log(`Deploying LandToken with the account: ${wallet.address}`);
@@ -25,8 +27,9 @@ async function main() {
   // Deploy the contract
   const contractURI = "ar://33rFVRyBCrCRBfpRk3f-S-wSEZgHez8IfgTw4DPBzXw";
   const baseURI = "ar://IQ1-6dzFwTQ6q-4cs4Q1HkZvh6BBmgiIQOg3kMcU8Mk/";
-  const daoAddress = "0x2105694E890678D3eB9340CfFB5eD43b0fA6474b";
-
+  
+  const daoAddress = "0xc01D72ac53dC1d3CEE4A47a02dC99A5D65932B04"; //zchain dao address
+  
   const LandToken = await ethers.getContractFactory("LandToken", wallet);
   const landToken = await LandToken.deploy(
     daoAddress,
@@ -44,10 +47,10 @@ async function main() {
   console.log(`LandToken deployed to: ${landAddr}`);
 
   // Verify the contract on Etherscan
-  console.log("Waiting for Etherscan to index the contract...");
-  await new Promise((resolve) => setTimeout(resolve, 60000)); // Wait for 60 seconds
+  //console.log("Waiting for Etherscan to index the contract...");
+  //await new Promise((resolve) => setTimeout(resolve, 60000)); // Wait for 60 seconds
 
-  console.log("Verifying the contract on Etherscan...");
+  /*console.log("Verifying the contract on Etherscan...");
   try {
     await run("verify:verify", {
       address: landAddr,
@@ -65,7 +68,7 @@ async function main() {
     console.log("Contract verified successfully!");
   } catch (error) {
     console.error("Error verifying contract:", error);
-  }
+  }*/
 }
 
 main().catch((error) => {
