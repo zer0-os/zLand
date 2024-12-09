@@ -1,22 +1,45 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
+import * as fs from "fs";
 
 describe('Resource Contract', function () {
   async function deployContractsFixture() {
     const [owner, user1, user2] = await ethers.getSigners();
-
-    // Get addresses using the new syntax
     const ownerAddress = await owner.getAddress();
-    const user1Address = await user1.getAddress();
-    const user2Address = await user2.getAddress();
 
-    // Deploy mock LandToken contract
-    const LandToken = await ethers.getContractFactory('ERC721Mock');
-    const landToken = await LandToken.deploy('LandToken', 'LAND');
- 
+    // Load values from the JSON file for LandToken minting
+    const values = JSON.parse(fs.readFileSync("values.json", "utf8"));
+    const treeValues = values.map((value: { address: string; id: string }) => [value.address, value.id]);
+    const tree = StandardMerkleTree.of(treeValues, ["address", "uint256"]);
+    const root = tree.root;
 
-    // Deploy mock ResourceToken contract
+    // Deploy the LandFactory contract
+    const LandFactory = await ethers.getContractFactory("LandFactory");
+    const landFactory = await LandFactory.deploy();
+    await landFactory.waitForDeployment();
+
+    // Create LandToken via the factory
+    const contractURI = "";
+    const baseURI = "";
+    const createTx = await landFactory.createLandToken(
+      ownerAddress,
+      100, // 100 basis points for royalties
+      "LandToken",
+      "LAND",
+      contractURI,
+      baseURI,
+      "1",
+      root
+    );
+    await createTx.wait();
+
+    // Fetch the deployed LandToken address from the factory's tokens array
+    const landTokenAddress = await landFactory.tokens(0);
+    const landToken = await ethers.getContractAt("LandToken", landTokenAddress);
+
+    // Deploy ResourceToken (ERC20Mock)
     const ResourceToken = await ethers.getContractFactory('ERC20Mock');
     const resourceToken = await ResourceToken.deploy(
       'ResourceToken',
@@ -24,41 +47,49 @@ describe('Resource Contract', function () {
       ownerAddress,
       ethers.parseEther('1000000')
     );
+    await resourceToken.waitForDeployment();
 
-    // Deploy mock MiningRig contract
+    // Deploy MiningRigMock
     const MiningRig = await ethers.getContractFactory('MiningRigMock');
     const miningRig = await MiningRig.deploy();
+    await miningRig.waitForDeployment();
+
+    const resourceTokenAddress = await resourceToken.getAddress();
+    const miningRigAddress = await miningRig.getAddress();
 
     // Deploy the Resource contract
     const Resource = await ethers.getContractFactory('Resource');
     const resource = await Resource.deploy(
-      landToken.address,
-      resourceToken.address,
-      miningRig.address
+      landTokenAddress,
+      resourceTokenAddress,
+      miningRigAddress
     );
+    await resource.waitForDeployment();
 
-    // Mint LandTokens to user1
-    //await landToken.mint(user1Address, 1);
-    //await landToken.mint(user1Address, 2);
+    // Claim a LandToken for user1 to have something to mine on
+    const entry = values[0]; // Take the first entry from values.json
+    const proof = tree.getProof([entry.address, entry.id]);
+    const tokenId = parseInt(entry.id);
+    await landToken.claim(proof, await user1.getAddress(), tokenId);
 
-    // Mint MiningRig tokens to user1
-    //await miningRig.mint(user1Address, 1);
-    //await miningRig.mint(user1Address, 2);
+    // Mint MiningRig tokens to user1 for testing
+    await miningRig.mint(await user1.getAddress(), 1);
+    await miningRig.mint(await user1.getAddress(), 2);
 
     // Set attributes for the mining rigs
-    //await miningRig.setRigAttributes(1, 100, 100, 100, 100); // speed, efficiency, depth, health
-    //await miningRig.setRigAttributes(2, 200, 200, 200, 200);
+    await miningRig.setRigAttributes(1, 100, 100, 100, 100); // speed, efficiency, depth, health
+    await miningRig.setRigAttributes(2, 200, 200, 200, 200);
 
     return { owner, user1, user2, landToken, resourceToken, miningRig, resource };
   }
 
   describe('startMining', function () {
-    it('Should allow the owner to start mining', async function () {
+    it('Should allow the owner of the rig to start mining', async function () {
       const { user1, resource } = await loadFixture(deployContractsFixture);
 
       const resourceUser1 = resource.connect(user1);
 
-      // Start mining with rigTokenId 1 on landTokenId 1
+      // Start mining with rigTokenId 1 on the user's owned LandToken ID (from values.json)
       await resourceUser1.startMining(1, 1);
 
       // Verify that resources_per_block is set
@@ -218,7 +249,7 @@ describe('Resource Contract', function () {
       const currentBlock = BigInt(await ethers.provider.getBlockNumber());
 
       // Calculate expected mined resources
-      const expectedMinedResources = resourcesPerBlock*(currentBlock - lastClaim);
+      const expectedMinedResources = resourcesPerBlock * (currentBlock - lastClaim);
 
       expect(minedResources).to.equal(expectedMinedResources);
     });

@@ -69,8 +69,8 @@ async function main() {
 
   //const testURI = "ar://LuCKuEYHW0rRu5etqAXbWsWAaXlQIiF_5QjZYBxOD0g";
   //const testURI = "ar://cDQLqHx5Wta4YbJ7HgzeiZ3HJUrSxjFDofsCh12SGoE";
-  const myAddress = "0xf149ade77440599f96aa8cb31f551ecbc8386408";
-  const myID = BigInt("36522723110118913137724504366426841514893083013854058470912851648593171337128");
+
+  
 
   // Issue tokens in a loop
   const numberOfTokensToIssue = 1; // Adjust this value as needed
