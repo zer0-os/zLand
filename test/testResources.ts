@@ -43,17 +43,23 @@ describe('Resource Contract', function () {
     const ResourceToken = await ethers.getContractFactory('ERC20Mock');
     const resourceToken = await ResourceToken.deploy(
       'ResourceToken',
-      'RES',
-      ownerAddress,
-      ethers.parseEther('1000000')
+      'RES'
     );
     await resourceToken.waitForDeployment();
 
-    // Deploy MiningRigMock
-    const MiningRig = await ethers.getContractFactory('MiningRigMock');
-    const miningRig = await MiningRig.deploy();
-    await miningRig.waitForDeployment();
+    const royaltyReceiver = ownerAddress;
+    const royaltyFeeNumerator = "5";
+    const tokenName = "Mining Rig";
+    const tokenSymbol = "MINR";
+    const minerContractURI = "";
+    const minerBaseURI = "";
+    const version = "1";
+    const minerRoot = root;
 
+    // Deploy MiningRigMock
+    const MiningRig = await ethers.getContractFactory('MiningRig');
+    const miningRig = await MiningRig.deploy(royaltyReceiver, royaltyFeeNumerator, tokenName, tokenSymbol, minerContractURI, minerBaseURI, version, minerRoot);
+  
     const resourceTokenAddress = await resourceToken.getAddress();
     const miningRigAddress = await miningRig.getAddress();
 
@@ -73,12 +79,8 @@ describe('Resource Contract', function () {
     await landToken.claim(proof, await user1.getAddress(), tokenId);
 
     // Mint MiningRig tokens to user1 for testing
-    await miningRig.mint(await user1.getAddress(), 1);
-    await miningRig.mint(await user1.getAddress(), 2);
-
-    // Set attributes for the mining rigs
-    await miningRig.setRigAttributes(1, 100, 100, 100, 100); // speed, efficiency, depth, health
-    await miningRig.setRigAttributes(2, 200, 200, 200, 200);
+    //await miningRig.mint(await user1.getAddress(), 1);
+    //await miningRig.mint(await user1.getAddress(), 2);
 
     return { owner, user1, user2, landToken, resourceToken, miningRig, resource };
   }

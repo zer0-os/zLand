@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { BasicRoyalties, ERC2981 } from "../../../lib/creator-token-contracts/contracts/programmable-royalties/BasicRoyalties.sol";
-import { ILandToken } from "../ILandToken.sol";
+import { IMiningRig } from "./IMiningRig.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import { ERC721VotesC, ERC721, EIP712 } from "../ERC721VotesC.sol";
@@ -15,7 +15,7 @@ import "../../../lib/creator-token-contracts/contracts/interfaces/ICreatorTokenT
  * @dev ERC721 token contract with Merkle tree-based airdrop issuance and custom URI handling.
  * @custom:security-contact admin@zer0.tech
  */
-contract MiningRig is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
+contract MiningRig is IMiningRig, Ownable, ERC721VotesC, BasicRoyalties{
     /// @dev Thrown when trying to issue a token that has already been claimed.
     /// @param tokenId The ID of the token that has already been claimed.
     /// @param owner The current owner of the token.
@@ -109,30 +109,6 @@ contract MiningRig is Ownable, ERC721VotesC, BasicRoyalties, ILandToken {
             revert INVALID_PROOF();
         }
 
-        _safeMint(recipient, tokenId);
-    }
-
-    /**
-     * @notice Issues a token to a recipient if the Merkle proof is valid and the token has not been claimed.
-     * @dev This function verifies the Merkle proof before minting the token.
-     * @dev If _burn is implemented, then the ID_CLAIMED revert should be changed to check the proof instead.
-     * @param proof The Merkle proof that validates the recipient's claim.
-     * @param recipient The address of the recipient.
-     * @param tokenId The ID of the token to be issued.
-     * @custom:throws ID_CLAIMED if the token has already been claimed.
-     * @custom:throws INVALID_PROOF if the provided Merkle proof is invalid.
-     */
-    function issue(bytes32[] memory proof, address recipient, uint256 tokenId, string memory metadata) public override onlyOwner {
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(recipient, tokenId))));
-
-        if (_exists(tokenId)) {
-            revert ID_CLAIMED(tokenId, ownerOf(tokenId));
-        }
-        if (!MerkleProof.verify(proof, root, leaf)) {
-            revert INVALID_PROOF();
-        }
-
-        tokenURIs[tokenId] = metadata;
         _safeMint(recipient, tokenId);
     }
 
