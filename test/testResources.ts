@@ -73,11 +73,12 @@ describe('Resource Contract', function () {
     await resource.waitForDeployment();
 
     // Claim a LandToken for user1 to have something to mine on
-    const entry = values[0]; // Take the first entry from values.json
+    const entry = values[1]; // Take the first entry from values.json
     const proof = tree.getProof([entry.address, entry.id]);
     const tokenId = parseInt(entry.id);
-    await landToken.claim(proof, await user1.getAddress(), tokenId);
 
+    await landToken.claim(proof, await user1.getAddress(), tokenId);
+    await miningRig.claim(proof, await user1.getAddress(), tokenId);
     // Mint MiningRig tokens to user1 for testing
     //await miningRig.mint(await user1.getAddress(), 1);
     //await miningRig.mint(await user1.getAddress(), 2);
