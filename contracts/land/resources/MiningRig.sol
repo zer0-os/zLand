@@ -109,6 +109,8 @@ contract MiningRig is IMiningRig, Ownable, ERC721VotesC, BasicRoyalties{
             revert INVALID_PROOF();
         }
 
+        rigAttributes[tokenId] = RigAttributes(1,1,1,1);
+
         _safeMint(recipient, tokenId);
     }
 

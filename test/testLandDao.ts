@@ -129,7 +129,7 @@ describe("LandToken and ZDAO Integration", function () {
       const { zDAO, zDAOaddr, landToken, timelockAddr, owner, addr1, tree, values } = await loadFixture(deployZDAOFixture);
     
       // Mint an additional LandToken to addr1 (for governance purposes)
-      const entry = values[0];
+      const entry = values[10];
       const proof = tree.getProof([entry.address, entry.id]);
       const tokenId = parseInt(entry.id);
     

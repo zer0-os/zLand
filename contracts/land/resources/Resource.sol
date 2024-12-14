@@ -73,7 +73,7 @@ contract Resource {
         // Calculate resources per block
         uint256 rigResourcesPerBlock = (uint256(int256(baseResourcePerBlock)) *
             speed *
-            efficiency) / 1e4; // Adjusted by 1e4 for precision
+            efficiency);
 
         // Update mappings
         resources_per_block[rigTokenId] = rigResourcesPerBlock;
@@ -112,7 +112,7 @@ contract Resource {
         uint256 mined = resources_mined(rigTokenId);
         last_claim[rigTokenId] = block.number;
 
-        // Mint resource tokens to the miner
+        // Transfer resource tokens to the miner
         resourceToken.transfer(msg.sender, mined);
     }
 

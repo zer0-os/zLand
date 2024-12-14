@@ -79,16 +79,15 @@ describe('Resource Contract', function () {
 
     await landToken.claim(proof, await user1.getAddress(), tokenId);
     await miningRig.claim(proof, await user1.getAddress(), tokenId);
-    // Mint MiningRig tokens to user1 for testing
-    //await miningRig.mint(await user1.getAddress(), 1);
-    //await miningRig.mint(await user1.getAddress(), 2);
+    
+    await resourceToken.transfer(await resource.getAddress(), 123456780);
 
     return { owner, user1, user2, landToken, resourceToken, miningRig, resource };
   }
 
   describe('startMining', function () {
     it('Should allow the owner of the rig to start mining', async function () {
-      const { user1, resource } = await loadFixture(deployContractsFixture);
+      const { user1, resource, miningRig } = await loadFixture(deployContractsFixture);
 
       const resourceUser1 = resource.connect(user1);
 
@@ -119,7 +118,7 @@ describe('Resource Contract', function () {
       await resourceUser1.startMining(1, 1);
 
       // Attempt to start mining again with the same rig
-      await expect(resourceUser1.startMining(1, 2))
+      await expect(resourceUser1.startMining(1, 1))
         .to.be.revertedWith('Rig is already mining');
     });
   });
