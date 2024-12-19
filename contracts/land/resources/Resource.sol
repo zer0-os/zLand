@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -10,22 +11,39 @@ contract Resource {
     uint256 public pool_nom = 9;
     uint256 public pool_div = 10;
 
-    IERC721 landToken;
-    IERC4626 resourceToken;
-    MiningRig miningRig;
+    IERC721 public landToken;
+    MiningRig public miningRig;
 
+    struct ResourceRange {
+        IERC4626 token;
+        uint256 minDepth;
+        uint256 maxDepth;
+    }
+
+    ResourceRange[] public resourceRanges;
+
+    // Mappings
     mapping(uint256 => uint256) public resources_per_block; // rigTokenId => resources per block
-    mapping(uint256 => uint256) public last_claim; // rigTokenId => last claim block
-    mapping(uint256 => uint256) public rigToLand; // rigTokenId => landTokenId
+    mapping(uint256 => uint256) public last_claim;          // rigTokenId => last claim block
+    mapping(uint256 => uint256) public rigToLand;           // rigTokenId => landTokenId
+    mapping(uint256 => IERC4626) public rigToResourceToken; // rigTokenId => resource token
 
     constructor(
         IERC721 land_token,
-        IERC4626 resource_token,
         MiningRig mining_rig
     ) {
         landToken = land_token;
-        resourceToken = resource_token;
         miningRig = mining_rig;
+    }
+
+    // Add a new resource configuration
+    function addResource(
+        IERC4626 token,
+        uint256 minDepth,
+        uint256 maxDepth
+    ) external {
+        require(minDepth <= maxDepth, "Invalid depth range");
+        resourceRanges.push(ResourceRange({token: token, minDepth: minDepth, maxDepth: maxDepth}));
     }
 
     // Convert tokenId to x and y coordinates
@@ -66,19 +84,20 @@ contract Resource {
         require(baseResourcePerBlock > 0, "Invalid resource value");
 
         // Get mining rig attributes
-        (uint256 speed, uint256 efficiency, uint256 depth, uint256 health) = miningRig.rigAttributes(
-            rigTokenId
-        );
+        (uint256 speed, uint256 efficiency, uint256 depth, uint256 health) = miningRig.rigAttributes(rigTokenId);
+
+        // Determine which resource token applies to this depth
+        IERC4626 selectedToken = getResourceForDepth(depth);
+        require(address(selectedToken) != address(0), "No resource for this depth");
 
         // Calculate resources per block
-        uint256 rigResourcesPerBlock = (uint256(int256(baseResourcePerBlock)) *
-            speed *
-            efficiency);
+        uint256 rigResourcesPerBlock = (uint256(int256(baseResourcePerBlock)) * speed * efficiency);
 
         // Update mappings
         resources_per_block[rigTokenId] = rigResourcesPerBlock;
         last_claim[rigTokenId] = block.number;
         rigToLand[rigTokenId] = landTokenId;
+        rigToResourceToken[rigTokenId] = selectedToken;
     }
 
     // Stop mining with a rig
@@ -99,6 +118,7 @@ contract Resource {
         // Reset mappings
         resources_per_block[rigTokenId] = 0;
         delete rigToLand[rigTokenId];
+        delete rigToResourceToken[rigTokenId];
     }
 
     // Claim mined resources
@@ -112,8 +132,10 @@ contract Resource {
         uint256 mined = resources_mined(rigTokenId);
         last_claim[rigTokenId] = block.number;
 
-        // Transfer resource tokens to the miner
-        resourceToken.transfer(msg.sender, mined);
+        IERC4626 token = rigToResourceToken[rigTokenId];
+        require(address(token) != address(0), "No resource token assigned");
+
+        token.transfer(msg.sender, mined);
     }
 
     // Calculate resources mined by a rig
@@ -125,6 +147,16 @@ contract Resource {
         return
             resources_per_block[rigTokenId] *
             (block.number - last_claim[rigTokenId]);
+    }
+
+    // Find the appropriate resource token for a given depth
+    function getResourceForDepth(uint256 depth) internal view returns (IERC4626) {
+        for (uint256 i = 0; i < resourceRanges.length; i++) {
+            if (depth >= resourceRanges[i].minDepth && depth <= resourceRanges[i].maxDepth) {
+                return resourceRanges[i].token;
+            }
+        }
+        return IERC4626(address(0));
     }
 
     // Noise functions (unchanged)

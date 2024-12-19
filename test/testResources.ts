@@ -46,7 +46,9 @@ describe('Resource Contract', function () {
       'RES'
     );
     await resourceToken.waitForDeployment();
+    const resourceTokenAddress = await resourceToken.getAddress();
 
+    // Deploy MiningRigMock
     const royaltyReceiver = ownerAddress;
     const royaltyFeeNumerator = "5";
     const tokenName = "Mining Rig";
@@ -56,21 +58,21 @@ describe('Resource Contract', function () {
     const version = "1";
     const minerRoot = root;
 
-    // Deploy MiningRigMock
     const MiningRig = await ethers.getContractFactory('MiningRig');
     const miningRig = await MiningRig.deploy(royaltyReceiver, royaltyFeeNumerator, tokenName, tokenSymbol, minerContractURI, minerBaseURI, version, minerRoot);
-  
-    const resourceTokenAddress = await resourceToken.getAddress();
+    await miningRig.waitForDeployment();
     const miningRigAddress = await miningRig.getAddress();
 
-    // Deploy the Resource contract
+    // Deploy the Resource contract (no longer needs resourceToken in the constructor)
     const Resource = await ethers.getContractFactory('Resource');
     const resource = await Resource.deploy(
       landTokenAddress,
-      resourceTokenAddress,
       miningRigAddress
     );
     await resource.waitForDeployment();
+
+    // Add a resource range that covers all possible depths (adjust if needed)
+    await resource.addResource(resourceTokenAddress, 0, 999999);
 
     // Claim a LandToken for user1 to have something to mine on
     const entry = values[1]; // Take the first entry from values.json
@@ -79,7 +81,8 @@ describe('Resource Contract', function () {
 
     await landToken.claim(proof, await user1.getAddress(), tokenId);
     await miningRig.claim(proof, await user1.getAddress(), tokenId);
-    
+
+    // Fund the Resource contract with a large amount of resource tokens
     await resourceToken.transfer(await resource.getAddress(), 123456780);
 
     return { owner, user1, user2, landToken, resourceToken, miningRig, resource };
@@ -87,7 +90,7 @@ describe('Resource Contract', function () {
 
   describe('startMining', function () {
     it('Should allow the owner of the rig to start mining', async function () {
-      const { user1, resource, miningRig } = await loadFixture(deployContractsFixture);
+      const { user1, resource } = await loadFixture(deployContractsFixture);
 
       const resourceUser1 = resource.connect(user1);
 
