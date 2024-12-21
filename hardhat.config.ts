@@ -10,7 +10,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,   // Enable the optimizer
-        runs: 200        // Adjust the number of optimization runs (200 is a common default)
+        runs: 200       // Adjust the number of optimization runs (200 is a common default)
       }
     }
   },  
