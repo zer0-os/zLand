@@ -8,13 +8,14 @@ import "./MiningRig.sol";
 
 /**
  * @title Resource
- * @notice A contract that uses a Merkle proof of (landTokenId, resourceToken, totalAmount).
- *         Each rig can mine up to `totalAmount` of the given ERC20 resource token.
+ * @notice A contract that uses a Merkle proof of (landTokenId, totalAmount).
+ *         Each rig can mine up to `totalAmount` of a given ERC20 resource token.
+ *
  */
 contract Resource {
     IERC721 public landToken;
     MiningRig public miningRig;
-    bytes32 public merkleRoot; // Merkle root for (landTokenId, resourceToken, totalAmount)
+    bytes32 public merkleRoot; // Merkle root for (landTokenId, totalAmount)
 
     // Mappings
     mapping(uint256 => uint256) public resources_per_block; // rigTokenId => how many tokens are produced per block
@@ -35,13 +36,13 @@ contract Resource {
     }
 
     /**
-     * @notice Start mining with a given rig on a given land, verifying (landTokenId, resourceToken, totalAmount) via Merkle proof.
+     * @notice Start mining with a given rig on a given land, verifying (landTokenId, totalAmount) via Merkle proof.
      * @dev totalAmount is the maximum the rig can mine for that land token's resource.
      * @param rigTokenId   The rig's token ID
      * @param landTokenId  The land token ID
      * @param resourceToken The ERC20 token address for the resource
      * @param totalAmount  The total resource amount allowed
-     * @param proof        The Merkle proof for (landTokenId, resourceToken, totalAmount)
+     * @param proof        The Merkle proof for (landTokenId, totalAmount)
      */
     function startMining(
         uint256 rigTokenId,
@@ -53,16 +54,17 @@ contract Resource {
         // Ownership checks
         require(miningRig.ownerOf(rigTokenId) == msg.sender, "Not rig owner");
         require(landToken.ownerOf(landTokenId) == msg.sender, "Not land owner");
-
-        // Ensure this rig is not already mining
         require(resources_per_block[rigTokenId] == 0, "Already mining");
 
-        // Verify Merkle proof
-        // leaf = keccak256(abi.encodePacked(landTokenId, resourceToken, totalAmount))
-        bytes32 leaf = keccak256(abi.encodePacked(landTokenId, resourceToken, totalAmount));
-        require(MerkleProof.verify(proof, merkleRoot, leaf), "Invalid merkle proof");
-
         require(totalAmount > 0, "Invalid total amount");
+
+        // EXACTLY like LandToken's style: leaf = keccak256(bytes.concat( keccak256(abi.encode(...)) ))
+        bytes32 leaf = keccak256(
+            bytes.concat(
+                keccak256(abi.encode(landTokenId, totalAmount))
+            )
+        );
+        require(MerkleProof.verify(proof, merkleRoot, leaf), "Invalid merkle proof");
 
         // Get rig attributes (speed, efficiency, etc.)
         (uint256 speed, uint256 efficiency, , ) = miningRig.rigAttributes(rigTokenId);

@@ -76,19 +76,21 @@ describe('Resource Contract (Merkle-based)', function () {
     await miningRig.waitForDeployment();
 
     // -------------------------------------------------------
-    // 5. Build a Merkle tree for (landTokenId, resourceToken, totalAmount).
-    //    We'll assume landTokenId=1, resourceToken=resourceTokenAddress, totalAmount=999999
+    // 5. Build a Merkle tree for (landTokenId, totalAmount) ONLY
+    //    We'll assume landTokenId=1, totalAmount=999999
     // -------------------------------------------------------
     const landTokenId = 1;
     const totalAmount = 999999; // Max user can mine
-    const singleEntryValues = [[
-      landTokenId.toString(),
-      resourceTokenAddress,
-      totalAmount.toString()
-    ]];
+
+    // Each leaf is now just [landTokenId, totalAmount]
+    const singleEntryValues = [
+      [landTokenId.toString(), totalAmount.toString()]
+    ];
+
+    // Create the Merkle tree with 2 fields: landTokenId, totalAmount
     const singleMerkleTree = StandardMerkleTree.of(
       singleEntryValues,
-      ["uint256", "address", "uint256"]
+      ["uint256", "uint256"]
     );
     const merkleRoot = singleMerkleTree.root;
     const proof = singleMerkleTree.getProof(singleEntryValues[0]);
@@ -139,6 +141,10 @@ describe('Resource Contract (Merkle-based)', function () {
     };
   }
 
+  // ---------------------------------------------------------------------------
+  // TESTS
+  // ---------------------------------------------------------------------------
+
   describe('startMining', function () {
     it('Should allow the owner of the rig to start mining', async function () {
       const {
@@ -148,7 +154,9 @@ describe('Resource Contract (Merkle-based)', function () {
 
       const resourceUser1 = resource.connect(user1);
 
-      // rigTokenId=1, landTokenId=1, resourceToken=..., totalAmount=..., proof=...
+      // rigTokenId=1, landTokenId=1, resourceToken=?, totalAmount=?, proof=...
+      // NOTE: Even though we pass resourceTokenAddress here, the on-chain Merkle check 
+      // will only be verifying (landTokenId, totalAmount).
       await resourceUser1.startMining(
         1,
         landTokenId,
@@ -223,7 +231,7 @@ describe('Resource Contract (Merkle-based)', function () {
       // Start
       await resourceUser1.startMining(1, landTokenId, resourceTokenAddress, totalAmount, proof);
 
-      // Simulate mining
+      // Simulate mining by advancing blocks
       for (let i = 0; i < 3; i++) {
         await ethers.provider.send('evm_mine', []);
       }
@@ -274,7 +282,7 @@ describe('Resource Contract (Merkle-based)', function () {
       // Start
       await resourceUser1.startMining(1, landTokenId, resourceTokenAddress, totalAmount, proof);
 
-      // Advance blocks
+      // Advance some blocks
       for (let i = 0; i < 3; i++) {
         await ethers.provider.send('evm_mine', []);
       }
@@ -298,7 +306,7 @@ describe('Resource Contract (Merkle-based)', function () {
       // Start as user1
       await resourceUser1.startMining(1, landTokenId, resourceTokenAddress, totalAmount, proof);
 
-      // Blocks
+      // Mine some blocks
       for (let i = 0; i < 2; i++) {
         await ethers.provider.send('evm_mine', []);
       }
