@@ -349,4 +349,85 @@ describe('Resource Contract (Merkle-based)', function () {
       expect(BigInt(mined)).to.equal(expected);
     });
   });
+  describe('edge', function () {
+    it('Should revert if totalAmount=0 when calling startMining', async function () {
+      const {
+        user1, resource,
+        landTokenId, resourceTokenAddress, proof
+      } = await loadFixture(deployContractsFixture);
+  
+      const resourceUser1 = resource.connect(user1);
+  
+      // Attempt startMining with totalAmount=0
+      await expect(
+        resourceUser1.startMining(
+          1,                // rigTokenId
+          landTokenId,      // must match the Merkle proof
+          resourceTokenAddress,
+          0,                // invalid totalAmount
+          proof
+        )
+      ).to.be.revertedWith('Invalid total amount');
+    });
+  
+    it('Should not revert if the rig is not mining when claimMinedResources is called by the owner', async function () {
+      const {
+        user1,
+        resource,
+        resourceToken
+      } = await loadFixture(deployContractsFixture);
+  
+      // user1 owns rig #1 but has never started mining
+      const resourceUser1 = resource.connect(user1);
+      const user1Address = await user1.getAddress();
+  
+      const beforeBal = await resourceToken.balanceOf(user1Address);
+  
+      // claimMinedResources(1) while not mining
+      // The contract code only reverts if the caller is NOT the rig owner.
+      // Since user1 IS the owner, it should not revert; it should simply do nothing.
+      await resourceUser1.claimMinedResources(1);
+  
+      const afterBal = await resourceToken.balanceOf(user1Address);
+      expect(afterBal).to.equal(beforeBal);
+    });
+  
+    it('Should reset everything if stopMining is called immediately after startMining', async function () {
+      const {
+        user1,
+        resource,
+        landTokenId,
+        resourceTokenAddress,
+        totalAmount,
+        proof
+      } = await loadFixture(deployContractsFixture);
+  
+      const resourceUser1 = resource.connect(user1);
+  
+      // Start mining and then stop mining immediately
+      await resourceUser1.startMining(
+        1,              // rigTokenId
+        landTokenId,
+        resourceTokenAddress,
+        totalAmount,    // must match the Merkle proof
+        proof
+      );
+      await resourceUser1.stopMining(1);
+  
+      // Verify that all mappings for rigTokenId=1 are reset
+      const rpb = await resource.resources_per_block(1);
+      const allowed = await resource.totalAllowed(1);
+      const minedSoFar = await resource.minedSoFar(1);
+      const assignedLand = await resource.rigToLand(1);
+      const assignedToken = await resource.rigToResourceToken(1);
+  
+      expect(rpb).to.equal(0);
+      expect(allowed).to.equal(0);
+      expect(minedSoFar).to.equal(0);
+      expect(assignedLand).to.equal(0);
+      expect(assignedToken).to.equal('0x0000000000000000000000000000000000000000');
+    });
+  });
+  
+  
 });
