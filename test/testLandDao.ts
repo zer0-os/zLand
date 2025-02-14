@@ -14,7 +14,7 @@ async function mineBlocks(numberOfBlocks: number) {
 
 const provider = ethers.provider;
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
-console.log(wallet);
+console.log("ADDY ", wallet.address);
 interface Entry {
   address: string;
   id: string;
